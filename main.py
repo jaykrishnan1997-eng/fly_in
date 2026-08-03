@@ -7,16 +7,20 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:17:07 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/03 14:23:39 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/03 14:57:20 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import sys
+# from parser.map_parser import parser
 
 
 def main() -> None:
-    if len(sys.argv) < 2:
+    if len(sys.argv) != 2:
         print("Usage is: python3 main.py <path/to/map.txt>")
+        sys.exit(1)
+
+    # parsed = parser(sys.argv[1])
 
 
 if __name__ == "__main__":
@@ -24,3 +28,4 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         print(f"Unknown error: {e}")
+        sys.exit(1)

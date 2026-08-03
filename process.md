@@ -8,3 +8,6 @@
 - [mpouillo/42-fly-in](https://github.com/mpouillo/42-fly-in), ran this, also learned the algorithm fundamentaly mentioned via youtube and g4g
 - Starting parsing, map is the config!
 - Another well structured reference : (https://github.com/sergioromero2k/42_Fly-in_v1.4). Project/Folder structure inspired.
+- From claude i understand Zone need a class that accepts name, type, capacity, extra metadata.
+- Drone needs ID, current position, destination-properties
+- Connection needs node a, node b and capacity
