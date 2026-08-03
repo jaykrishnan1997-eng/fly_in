@@ -7,4 +7,4 @@
 - this file process will document my process in understanding.
 - [mpouillo/42-fly-in](https://github.com/mpouillo/42-fly-in), ran this, also learned the algorithm fundamentaly mentioned via youtube and g4g
 - Starting parsing, map is the config!
-
+- Another well structured reference : (https://github.com/sergioromero2k/42_Fly-in_v1.4). Project/Folder structure inspired.
