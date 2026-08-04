@@ -11,3 +11,9 @@
 - From claude i understand Zone need a class that accepts name, type, capacity, extra metadata.
 - Drone needs ID, current position, destination-properties
 - Connection needs node a, node b and capacity
+
+# Day 2
+
+- Started class zone also included x, y, color and a seld describing method
+- started class graph with list of zones, connections and start, stop zones, and total number of drones.
+- Started class connections with zone_a, zone_b, max_drones.
