@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:51:56 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/04 20:28:07 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/04 22:30:03 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -17,11 +17,17 @@
 # from data_models.zone import Zone
 # from typing import List
 
-class Parser():
-    def __init__():
-        pass
-# """Class responsible for parsing map files into a Graph object."""
-# """
+# class Parser():
+#     """ For parsing map information into graph object"""
+#     def parse_line(self, line: List[str]):
+#         pass
+
+
+#     def parse(self, path: str):
+#         self.path = path
+
+
+# """ parse_zone:
 #         Parses a zone definition line and extracts metadata.
 #         Its only job is to convert a list of words into a Zone object.
 
@@ -34,7 +40,7 @@ class Parser():
 
 #         Raises:
 #             ValueError: If an invalid zone type is encountered.
-#         """
+#         """parse:
 #         """Reads a file and constructs the Graph
 #             representing the drone network.
 
@@ -49,5 +55,5 @@ class Parser():
 #                 duplicate connections, or invalid drone counts.
 #             FileNotFoundError: If the specified file does not exist.
 #         """
-#         """Parses and validates a positive integer within MAX_VALUE."""
-#         """Registers a zone and checks for duplicates."""
+#         """parse_pos_int:Parses and validates a positive integer within MAX_VALUE."""
+#         """register_zone:Registers a zone and checks for duplicates."""
