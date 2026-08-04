@@ -17,3 +17,7 @@
 - Started class zone also included x, y, color and a seld describing method
 - started class graph with list of zones, connections and start, stop zones, and total number of drones.
 - Started class connections with zone_a, zone_b, max_drones.
+- started parsing class, also made sure git has numbpy and flake8 check
+-  pre-commit --version
+  pre-commit install
+  pre-commit run --all-files
