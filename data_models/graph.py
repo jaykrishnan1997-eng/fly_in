@@ -31,10 +31,12 @@ class Graph:
         self.total_drones = total_drones
 
     def __str__(self) -> str:
+        nb_zones = len(self.zones)
+        nb_connections = len(self.connections)
         return (
-            f"Graph: len({self.zones} zones"
-            f" and len({self.connections} connections)\n"
+            f"Graph: {nb_zones} zones"
+            f" and {nb_connections} connections\n\n"
             f"Start zone: {self.start_hub}\n"
             f"end zone: {self.end_hub}\n"
-            f"Total drones: {self.total_drones}"
+            f"Total drones: {self.total_drones}\n"
         )

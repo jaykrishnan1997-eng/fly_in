@@ -38,7 +38,7 @@ class Zone:
 
     def __str__(self) -> str:
         return (
-            f"name: {self.name}\ncoordinates: ({self.coordinates})\n"
-            f"type: {self.type}\ncolor: {self.color}"
-            f"maximum occupancy: {self.max_drones}"
+            f"name: {self.name}\ncoordinates: {self.coordinates}\n"
+            f"type: {self.type}\ncolor: {self.color}\n"
+            f"maximum occupancy: {self.max_drones}\n"
         )

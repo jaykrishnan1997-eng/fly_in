@@ -31,3 +31,4 @@
   - Asked gemini if a compress of this python statement is possible :if new_connection in connections or rev_connection in connections :
  - added init.py in every packages since import caused error of not recognizing file names.
  - chatgpt for error handling and corrections. Must learn to debug properly.
+ - Fixed the error on dispplay stats. Capable of handling even the challenger txt
