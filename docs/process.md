@@ -29,4 +29,5 @@
   - Also made the x, y coordinates into a tuple for ease of sorting the zones(probably unnecissary)
   - Asked "python sort coordinates tuple from class elements" to gemini.
   - Asked gemini if a compress of this python statement is possible :if new_connection in connections or rev_connection in connections :
- - added init.py in every packages since import caused error of not recognizing file names
+ - added init.py in every packages since import caused error of not recognizing file names.
+ - chatgpt for error handling and corrections. Must learn to debug properly.

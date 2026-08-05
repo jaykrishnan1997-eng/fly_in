@@ -7,12 +7,13 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:17:07 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/05 15:15:24 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/05 15:34:15 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import sys
 from parser.map_parser import Parser
+import traceback
 
 
 def main() -> None:
@@ -28,6 +29,6 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-    except Exception as e:
-        print(f"Unknown error: {e}")
+    except Exception:
+        traceback.print_exc()
         sys.exit(1)
