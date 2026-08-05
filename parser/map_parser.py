@@ -4,27 +4,131 @@
 #                                                          :::      ::::::::  #
 #   map_parser.py                                        :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:51:56 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/04 22:38:46 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/05 14:35:32 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 # import re
-# from data_models.connection import Connection
-# from data_models.graph import Graph
-# from data_models.zone import Zone
+from data_models.connection import Connection
+from data_models.graph import Graph
+from data_models.zone import Zone
 # from typing import List
-
-# class Parser():
-#     """ For parsing map information into graph object"""
-#     def parse_line(self, line: List[str]):
-#         pass
+import sys
 
 
-#     def parse(self, path: str):
-#         self.path = path
+class zone_types():
+    {
+        "normal": 1,
+        "blocked": sys.maxsize,
+        "restricted": 2,
+        "priority": 1
+    }
+
+
+class Parser():
+    """ For parsing map information into graph object"""
+    def __init__(self, path: str) -> None:
+        self.path = path
+        try:
+            with open(path) as f:
+                self.map = f
+        except Exception as e:
+            print(f"Error opening file '{path}': {e}")
+            sys.exit(1)
+
+    def parser(self, path: str) -> Graph:
+        nb_drones: int
+        zones: list[Zone] = []
+        connections: list[Connection] = []
+        start_hub: Zone
+        end_hub: Zone
+        token: list[str] = []
+        for line in self.map:
+            token = line.split()
+
+            if "nb_drones:" == token[0].lower():
+                nb_drones = int(token[1])
+
+            if "hub:" in token[0].lower():
+                unit_type = "normal"
+                unit_color = None
+                unit_max_drones = 1
+                for element in token:
+                    if "[" in element and "]" in element:
+                        metadata1: list[str] = (
+                            (element.strip("[")).strip("]")
+                        ).split()
+                        for unit in metadata1:
+                            if "zone=" in unit:
+                                unit_type = unit.strip("zone=")
+                            if "color=" in unit:
+                                unit_color = unit.strip("color=")
+                            if "max_drones=" in unit:
+                                unit_max_drones = int(
+                                    unit.strip("max_drones=")
+                                )
+                if "start_hub:" == token[0].lower():
+                    start_hub = Zone(
+                        token[1],
+                        (int(token[2]), int(token[3])),
+                        unit_type,
+                        unit_color,
+                        nb_drones
+                    )
+                elif "end_hub:" == token[0].lower():
+                    end_hub = Zone(
+                        token[1],
+                        (int(token[2]), int(token[3])),
+                        unit_type,
+                        unit_color,
+                        nb_drones
+                    )
+                else:
+                    zones.append(
+                        Zone(
+                            token[1],
+                            (int(token[2]), int(token[3])),
+                            unit_type,
+                            unit_color,
+                            unit_max_drones
+                        )
+                    )
+            zones = sorted(zones, key=lambda z: z.coordinates)
+
+            if "connection" == token[0].lower():
+                max_link_capacity: int = 1
+                for element in token:
+                    if "[" in element and "]" in element:
+                        metadata2: str = (element.strip("[")).strip("]")
+                        if "max_link_capacity=" in metadata2:
+                            max_link_capacity = int(metadata2.strip(
+                                "max_link_capacity="
+                            ))
+                    if "-" in element and element == token[1]:
+                        zone_data: list[str] = element.split("-")
+                        try:
+                            for zone in zones:
+                                if zone.name == zone_data[0]:
+                                    zone_a: Zone = zone
+                                elif zone.name == zone_data[1]:
+                                    zone_b: Zone = zone
+                                else:
+                                    raise ValueError
+                        except Exception as e:
+                            print(f" Unknown Zone data recieved:{e}")
+                            sys.exit(1)
+                connections.append(Connection(
+                    zone_a, zone_b,
+                    max_link_capacity
+                ))
+        graph_object: Graph = Graph(
+            zones, connections, start_hub, end_hub, nb_drones
+        )
+        return graph_object
+
 # """ parse_zone:
 #         Parses a zone definition line and extracts metadata.
 #         Its only job is to convert a list of words into a Zone object.
@@ -50,7 +154,7 @@
 
 #         Raises:
 #             ValueError: If parsing fails due to syntax errors, missing hubs,
-#                 duplicate connections, or invalid drone counts.
+#                 duplicate c, or invalid drone counts.
 #             FileNotFoundError: If the specified file does not exist.
 #         """
 #         """parse_pos_int:Parses and validates a positive integer

@@ -21,3 +21,10 @@
 -  pre-commit --version
   pre-commit install
   pre-commit run --all-files
+
+  # Day 3
+
+  - Diving into parser: started with the simple map. Parsing every sing content of map into graph object.
+  - There was a choice to parse and collect all the hub info together to make the code simpler. But as a safety precaution, i need to make sure the Zones list is sorted based on the coordinates.
+  - Also made the x, y coordinates into a tuple for ease of sorting the zones(probably unnecissary)
+  - Asked "python sort coordinates tuple from class elements" to gemini.
