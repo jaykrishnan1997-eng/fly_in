@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:51:56 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/05 14:35:32 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/05 15:13:02 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -39,7 +39,7 @@ class Parser():
             print(f"Error opening file '{path}': {e}")
             sys.exit(1)
 
-    def parser(self, path: str) -> Graph:
+    def parser(self) -> Graph:
         nb_drones: int
         zones: list[Zone] = []
         connections: list[Connection] = []
@@ -78,6 +78,9 @@ class Parser():
                         unit_color,
                         nb_drones
                     )
+                    if start_hub in zones:
+                        raise ValueError("multiple copies of a zone detected")
+                        sys.exit(1)
                 elif "end_hub:" == token[0].lower():
                     end_hub = Zone(
                         token[1],
@@ -86,16 +89,22 @@ class Parser():
                         unit_color,
                         nb_drones
                     )
+                    if start_hub in zones:
+                        raise ValueError("multiple copies of a zone detected")
+                        sys.exit(1)
                 else:
-                    zones.append(
-                        Zone(
+                    new_zone = Zone(
                             token[1],
                             (int(token[2]), int(token[3])),
                             unit_type,
                             unit_color,
                             unit_max_drones
-                        )
                     )
+                    if new_zone in zones:
+                        raise ValueError("multiple copies of a zone detected")
+                        sys.exit(1)
+                    zones.append(new_zone)
+
             zones = sorted(zones, key=lambda z: z.coordinates)
 
             if "connection" == token[0].lower():
@@ -120,13 +129,27 @@ class Parser():
                         except Exception as e:
                             print(f" Unknown Zone data recieved:{e}")
                             sys.exit(1)
-                connections.append(Connection(
-                    zone_a, zone_b,
-                    max_link_capacity
-                ))
-        graph_object: Graph = Graph(
-            zones, connections, start_hub, end_hub, nb_drones
-        )
+                    new_connection = Connection(
+                        zone_a, zone_b,
+                        max_link_capacity
+                    )
+                    rev_connection = Connection(
+                        zone_b, zone_a,
+                        max_link_capacity
+                    )
+                    if (
+                        new_connection in connections
+                        or rev_connection in connections
+                    ):
+                        print("Duplicate connections detected!")
+                        sys.exit(1)
+                connections.append(new_connection)
+        try:
+            graph_object: Graph = Graph(
+                zones, connections, start_hub, end_hub, nb_drones
+            )
+        except Exception as e:
+            print(f"Error detected: {e}")
         return graph_object
 
 # """ parse_zone:

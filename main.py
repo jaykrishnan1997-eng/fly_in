@@ -7,12 +7,12 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:17:07 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/03 14:57:20 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/05 15:15:24 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import sys
-# from parser.map_parser import parser
+from parser.map_parser import Parser
 
 
 def main() -> None:
@@ -20,7 +20,9 @@ def main() -> None:
         print("Usage is: python3 main.py <path/to/map.txt>")
         sys.exit(1)
 
-    # parsed = parser(sys.argv[1])
+    parsed = Parser(sys.argv[1])
+    graph_object = parsed.parser()
+    print(graph_object)
 
 
 if __name__ == "__main__":
