@@ -4,18 +4,27 @@
 #                                                          :::      ::::::::  #
 #   dijkstra.py                                          :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 10:55:37 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/06 15:15:10 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/06 21:32:07 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
-# import heapq
 # from data_models.graph import Graph
 # from data_models.connection import Connection
 # from data_models.zone import Zone
 # from typing import Callable
+
+
+# def dijkstra(zone: Zone, zone_stat, graph: Graph) -> dict[str:dict]:
+#     data: dict[Zone, int, Zone] = {}
+
+
+# h = []
+# heapq.heappush(h, 1)
+# heapq.heappush(h, 2)
+# print([heapq.heappop(h) for _ in range(2)])
 
 
 # def solver(self, graph: Graph) -> None:
@@ -35,12 +44,3 @@
 #             [Zone.ZONE_COSTS[line.zone_b.type], line.max_link_capacity]
 #         )
 #     return cost_dictionary
-
-
-# def dijkstra(graph: Graph) -> dict[str:dict]:
-#     data: dict[Zone, int, Zone] = {}
-#     pass
-# # h = []
-# # heapq.heappush(h, 1)
-# # heapq.heappush(h, 2)
-# # print([heapq.heappop(h) for _ in range(2)])

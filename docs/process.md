@@ -42,4 +42,5 @@
  - starting with simple easy case. 
  - Trial1: cost of connection is cost of the endpoint zone.
  Two cost should be there one for number of turns and one for no of drones possible
-  
+ - A new class called drones was created to hold current zone and the list returned by algorithm. Slightly over kill but looks better and easy to create an instance in engine.
+ - TO DO: Just one drone, make algorithm to move from start to end based on cost. Stat and alg every run untill all drone in end hub.

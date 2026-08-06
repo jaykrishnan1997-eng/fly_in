@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   connection.py                                        :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/04 16:45:46 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/05 11:02:01 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/06 21:31:59 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -23,10 +23,12 @@ class Connection:
 
         self.zone_a = zone_a
         self.zone_b = zone_b
+        self.cost = Zone.ZONE_COSTS[zone_b.type]
         self.max_link_capacity = max_link_capacity
 
     def __str__(self) -> str:
         return (
             f"Zone_a: {self.zone_a}\nZone_b: {self.zone_b}\n"
+            f"cost: {self.cost}\n"
             f"maximum drones allowed: {self.max_link_capacity}"
         )
