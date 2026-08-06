@@ -32,3 +32,14 @@
  - added init.py in every packages since import caused error of not recognizing file names.
  - chatgpt for error handling and corrections. Must learn to debug properly.
  - Fixed the error on dispplay stats. Capable of handling even the challenger txt
+
+ # Day 4
+
+ - started Dijkstras : choosing method over a alg class. Return is a dict for str and dict.
+ -  refer : https://youtu.be/bZkzH5x0SKU
+ - case: starting to think about just one drone finding path
+ - What is cost for every connection? And how should it be calculated in decided based on zones?
+ - starting with simple easy case. 
+ - Trial1: cost of connection is cost of the endpoint zone.
+ Two cost should be there one for number of turns and one for no of drones possible
+  

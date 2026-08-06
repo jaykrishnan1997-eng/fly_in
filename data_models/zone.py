@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/04 13:13:14 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/05 16:18:54 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/06 12:53:14 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -15,7 +15,7 @@ import sys
 
 
 class Zone:
-    ZONE_WEIGHTS = {
+    ZONE_COSTS = {
         "normal": 1,
         "blocked": sys.maxsize,
         "restricted": 2,
