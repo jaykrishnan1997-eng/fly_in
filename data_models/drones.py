@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   drones.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:33:02 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/06 21:31:56 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/07 14:14:33 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -18,11 +18,13 @@ from data_models.zone import Zone
 class Drone:
     def __init__(
         self, current_zone: Zone,
+        came_from: list[Zone],
         zone_path: list[Zone]
     ) -> None:
 
         self.current_zone = current_zone
         self.zone_path = zone_path
+        self.came_from = came_from
 
     # def __str__(self) -> str:
     #     return (

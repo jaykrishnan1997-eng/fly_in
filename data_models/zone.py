@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/04 13:13:14 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/06 12:53:14 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/07 16:04:01 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -16,10 +16,10 @@ import sys
 
 class Zone:
     ZONE_COSTS = {
-        "normal": 1,
-        "blocked": sys.maxsize,
-        "restricted": 2,
-        "priority": 1
+        "normal": (1, 1),
+        "blocked": (float(sys.maxsize), 4),
+        "restricted": (2, 3),
+        "priority": (1, 0),
     }
 
     def __init__(
@@ -35,6 +35,8 @@ class Zone:
         self.type = type
         self.color = color
         self.max_drones = max_drones
+        self.cost = Zone.ZONE_COSTS[type][0]
+        self.priority_nbr = Zone.ZONE_COSTS[type][1]
 
     def __str__(self) -> str:
         return (

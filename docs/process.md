@@ -1,4 +1,4 @@
-# Day 1
+# Day 1 (Phase1)
 
 - Read subject, understand basically how things should be. 
 - The use of AI must be for research, resources and planning only.
@@ -32,8 +32,46 @@
  - added init.py in every packages since import caused error of not recognizing file names.
  - chatgpt for error handling and corrections. Must learn to debug properly.
  - Fixed the error on dispplay stats. Capable of handling even the challenger txt
+ - example output:
+ 
+ ┬─[jkrishna@2-H-9:~/C/L/fly-in]─[02:10:23 PM]─[G:master=]
+╰─>$ python3 main.py maps/easy/01_linear_path.txt
+Graph: 4 zones and 3 connections
 
- # Day 4
+Start zone: name: start
+coordinates: (0, 0)
+type: normal
+color: green
+maximum occupancy: 2
+
+end zone: name: goal
+coordinates: (3, 0)
+type: normal
+color: red
+maximum occupancy: 2
+
+Total drones: 2
+
+┬─[jkrishna@2-H-9:~/C/L/fly-in]─[02:10:34 PM]─[G:master=]
+╰─>$ python3 main.py maps/challenger/01_the_impossible_dream.txt
+Graph: 54 zones and 70 connections
+
+Start zone: name: start
+coordinates: (0, 0)
+type: normal
+color: green
+maximum occupancy: 25
+
+end zone: name: impossible_goal
+coordinates: (21, 0)
+type: normal
+color: rainbow
+maximum occupancy: 25
+
+Total drones: 25
+
+
+ # Day 4 (Phase2)
 
  - started Dijkstras : choosing method over a alg class. Return is a dict for str and dict.
  -  refer : https://youtu.be/bZkzH5x0SKU
@@ -44,3 +82,18 @@
  Two cost should be there one for number of turns and one for no of drones possible
  - A new class called drones was created to hold current zone and the list returned by algorithm. Slightly over kill but looks better and easy to create an instance in engine.
  - TO DO: Just one drone, make algorithm to move from start to end based on cost. Stat and alg every run untill all drone in end hub.
+
+ # Day 5
+
+ - Asked claude what a cost calculation mean in the flyin and what and how a heapq works, deque works and the typing format for return.
+ - Just like traversing a list or the kruskal in A-maze-ing, i remade a python alg of Dijkstras. Bit complicated.
+ - The zone occupied condition havent been implemented yet. As said before, just one drone in my mind.
+ - Asked claude to suggest better option to handle the cost_stat table, with dict or with dataclass. dict was chosen with list replaced by tuple. access to tuple and list feels almost the same except if i need to update an elemenrt inside the tuple i need to update both. 
+ - heap wasnt supposed to be reset every step it is supposed to collect the chains posible. That is, heap should be outside the while loop.
+ - resetting: dijkstra. Claude was used for understanding exactly how heap and cost_stat are used in dijkstra. Also the logic had confusion and AI was used to understand them and to clarify doubt.
+ - heapq is still confusing. lots of mypy error and logic errors.
+
+ # #########################
+ # Doomsday
+
+ - The sun is down. My device battery is low. I dont know how long i can keep myself alive. Tell my future wife and kids that i love them.

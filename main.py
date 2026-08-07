@@ -7,14 +7,13 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:17:07 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/06 15:17:17 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/07 14:11:56 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import sys
 from parser.map_parser import Parser
 import traceback
-# from algorithm import dijkstra
 
 
 def main() -> None:
@@ -25,9 +24,7 @@ def main() -> None:
     parsed = Parser(sys.argv[1])
     graph_object = parsed.parser()
     print(graph_object)
-    # solving
-    # solution = dijkstra(graph_object)
-    # print(solution)
+    # core = engine(graph_object)
 
 
 if __name__ == "__main__":
