@@ -28,24 +28,24 @@ def neighbor(
     for line in connection:
         if (
             current_zone == line.zone_a
-            and line.zone_a not in came_from
-        ):
-            neighbor.append(line.zone_a)
-        elif (
-            current_zone == line.zone_b
             and line.zone_b not in came_from
         ):
             neighbor.append(line.zone_b)
+        elif (
+            current_zone == line.zone_b
+            and line.zone_a not in came_from
+        ):
+            neighbor.append(line.zone_a)
     return neighbor
 
 
 def dijkstra(
     drone: Drone, zone_stat: dict[Zone, int], graph: Graph
-) -> Zone:
+) -> list[Zone]:
     # must include restricted zone when the zone
     # is fully occupied in current, next and next-next move.
     current_zone: Zone = drone.current_zone
-    data: Deque[Zone] = deque()
+    visited: Deque[Zone] = deque()
     cost_stat: dict[
         Zone, tuple[float, Zone | None]
     ] = {}
@@ -54,24 +54,32 @@ def dijkstra(
             cost_stat.update({current_zone: (0, None)})
         else:
             cost_stat.update({zone: (sys.maxsize, None)})
-    heap: list[Zone] = []
-    heapq.heappush(heap, current_zone)  # type: ignore[type-var]
+    heap: list[tuple[float, Zone]] = []
+    heapq.heappush(heap, (0, current_zone))
     while heap:
-        if current_zone not in data:
+        current_zone = heapq.heappop(heap)[1]
+        if current_zone not in visited:
             neighbors: list[Zone] = neighbor(
                 current_zone, drone.came_from, graph.connections)
             for zone in neighbors:
                 total_cost = cost_stat[current_zone][0] + zone.cost
                 if total_cost < cost_stat[zone][0]:
                     cost_stat[zone] = (total_cost, current_zone)
-                    heapq.heappush(heap, zone)  # type: ignore[type-var]
-        # if total_cost for both path is the same then, compare priority
-        current_zone = heapq.heappop(heap)  # type: ignore[type-var]
-        data.append(current_zone)
+                    heapq.heappush(heap, (total_cost, zone))
+            visited.append(current_zone)
         if current_zone == graph.end_hub:
             break
     heap.clear()
-    return data.popleft()
+    path: list[Zone] = []
+    while current_zone != graph.start_hub:
+        path.append(current_zone)
+        previous = cost_stat[current_zone][1]
+        if previous is None:
+            break
+        current_zone = previous
+    path.append(graph.start_hub)
+    path.reverse()
+    return path
 
 
 # def cost(
