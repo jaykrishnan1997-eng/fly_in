@@ -91,7 +91,17 @@ Total drones: 25
  - Asked claude to suggest better option to handle the cost_stat table, with dict or with dataclass. dict was chosen with list replaced by tuple. access to tuple and list feels almost the same except if i need to update an elemenrt inside the tuple i need to update both. 
  - heap wasnt supposed to be reset every step it is supposed to collect the chains posible. That is, heap should be outside the while loop.
  - resetting: dijkstra. Claude was used for understanding exactly how heap and cost_stat are used in dijkstra. Also the logic had confusion and AI was used to understand them and to clarify doubt.
- - heapq is still confusing. lots of mypy error and logic errors.
+ - heapq is still confusing. lots of mypy error and logic errors. I did use clause for understanding logic issues in the algorithm. Right now it seemd working.
+
+ # Day 6
+
+ - starting with engine. Asked chatgpt for the best design choice and choose to keep engine separately for time movement and occupancy calc. Like traffic : engine and google map : alg for each vehicle.
+ - using function within function so that i can hold data in the outside function during every tick.
+ - Learned to take union of two list from : https://www.pythonpool.com/python-union-of-lists/
+ - include optimization and move functions to optimise or sort based on closeness to endpoint and move based on capacity.
+ - used google ai to understand how sorted function works, I forgot
+ - To do: remove drone_stat: class itself is capable of containing the path forward
+
 
  # #########################
  # Doomsday

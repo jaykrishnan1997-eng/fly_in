@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/04 13:13:14 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/07 16:04:01 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/08 12:54:41 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -17,7 +17,7 @@ import sys
 class Zone:
     ZONE_COSTS = {
         "normal": (1, 1),
-        "blocked": (float(sys.maxsize), 4),
+        "blocked": (sys.maxsize, 4),
         "restricted": (2, 3),
         "priority": (1, 0),
     }
