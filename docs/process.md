@@ -102,6 +102,13 @@ Total drones: 25
  - used google ai to understand how sorted function works, I forgot
  - To do: remove drone_stat: class itself is capable of containing the path forward
 
+ # Day 7[Aug 10] Kind of (Phase3)
+
+ - Kind of moving from single drone to multidrone case for simulation since its all the same.
+ - lot of confusion on the implementation. with multiple stats and how to update them. Claude was used for checking the correctness and bugs, and asked doubts on sorted function.
+ - Now the drones when on transit must wait. So how can i include that also while making a move.
+ - Drones was updated to include transit info when transiting through connection. This is better than choosing a seperate class. Now must include transit and update transit into code when zone is restricted.
+
 
  # #########################
  # Doomsday

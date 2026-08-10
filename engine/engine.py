@@ -7,103 +7,193 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/08 14:59:08 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/10 17:05:34 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
-# import sys
-# import time
-# import threading
-# # from typing import Any
-# # from data_models.connection import Connection
-# from data_models.zone import Zone
-# from data_models.graph import Graph
-# from data_models.drones import Drone
-# from algorithm.dijkstra import dijkstra
+import sys
+import time
+import math
+import threading
+from collections import deque
+from data_models.zone import Zone
+from data_models.graph import Graph
+from data_models.drones import Drone
+from algorithm.dijkstra import dijkstra
+from data_models.connection import Connection
 
 
-# class Engine:
-#     def __init__(self, graph: Graph):
-#         # creating an initiating a stat for each zone with data on
-#         # zone and number of drones in that zone
-#         zone_stat: dict[Zone, list[Drone]] = {}
-#         # creating a drone stat with drone object in order
-#         # and the path info, this can also be used to identify
-#         # each drones
-#         drones_stat: dict[Drone, list[Zone]] = {}
+class Engine:
+    def __init__(self, graph: Graph):
+        self.graph = graph
 
-#         for zone in graph.zones:
-#             if zone.coordinates == (0, 0):
-#                 for a in range(0, graph.total_drones):
-#                     drone = Drone()
-#                     zone_stat[zone].append(drone)
-#                     drones_stat[drone] = []
-#             zone_stat[zone] = []
+        self.zone_stat: dict[Zone, list[Drone]] = {}
+        self.drones_stat: dict[Drone, deque[Zone]] = {}
+        self.connection_stat: dict[Connection, list[Drone]] = {}
+        self.zone_outgoing: dict[Zone, int] = {}
 
-#         request: dict[Drone, Zone] = {}
-#         capacity: dict[Zone, int] = {}
+        for zone in self.graph.zones:
+            if zone == self.graph.start_hub:
+                self.zone_stat[zone] = []
+                for a in range(0, self.graph.total_drones):
+                    drone = Drone(self.graph.start_hub, [])
+                    self.zone_stat[zone].append(drone)
+                    self.drones_stat[drone] = deque()
+            else:
+                self.zone_stat[zone] = []
+        for connection in self.graph.connections:
+            self.connection_stat[connection] = []
+        self.request: dict[Drone, Zone] = {}
+        self.zone_occupancy: dict[Zone, int] = {}
+        self.connection_capacity: dict[Connection, int] = {}
 
-#         for zone in graph.zones:
-#             capacity[zone] = len(zone_stat[zone])
+        self.blocked: list[Zone] = [
+            zone for zone in self.graph.zones if zone.cost != sys.maxsize]
 
-#         blocked: list[Zone] = [
-#             zone for zone in graph.zones if zone.cost != sys.maxsize]
+    def get_connection(self, zone_a: Zone, zone_b: Zone) -> Connection | None:
+        for connection in self.graph.connections:
+            if (
+                (connection.zone_a == zone_a and connection.zone_b == zone_b)
+                or
+                (connection.zone_a == zone_b and connection.zone_b == zone_a)
+            ):
+                return connection
+        return None
 
-#         def simulation(zone_stat):
-#             # scanning, collecting paths and filling request and
-# #             for drone in drones_stat.keys():
-#                 union = list(set(blocked) | set(drone.came_from))
-#                 drones_stat[drone] = dijkstra(drone, union, graph)
-#                 request[drone] = drones_stat[drone][1]
+    def next_move(self) -> None:
+        self.request = {}
 
-#             # by now request is full and updated and drones_stat also full
-#             # scheduling next executuion after 1 second
-#             threading.Timer(1.0, simulation).start()
+        self.zone_outgoing = {
+            zone: 0
+            for zone in self.graph.zones
+        }
 
-#         # start loop
-#         simulation()
+        self.zone_occupancy = {
+            zone: len(self.zone_stat[zone])
+            for zone in self.graph.zones
+        }
 
-#         # keep the main thread alive
-#         try:
-#             while True:
-#                 time.sleep(1)
-#         except KeyboardInterrupt:
-#             pass
+        self.connection_capacity = {
+            connection: len(self.connection_stat[connection])
+            for connection in self.graph.connections
+        }
+        # optimization
+        drones = sorted(
+            self.drones_stat.keys(),
+            key=lambda drone: self.abs_distance(
+                drone.current_zone.coordinates[0],
+                drone.current_zone.coordinates[1]), reverse=True
+        )
 
-#         def move():
-#             pass
+        for drone in drones:
+            if len(self.drones_stat[drone]) <= 1:
+                # drone at destination
+                continue
+
+            next_zone = self.drones_stat[drone][1]
+            current_zone = drone.current_zone
+            connection = self.get_connection(current_zone, next_zone)
+            if (
+                ((
+                    self.zone_occupancy[next_zone]
+                    - self.zone_outgoing[next_zone])
+                    < next_zone.max_drones)
+                and connection
+                and self.connection_capacity[connection]
+                < connection.max_link_capacity
+            ):
+                self.request[drone] = next_zone
+                self.zone_occupancy[next_zone] += 1
+                self.zone_outgoing[current_zone] += 1
+                self.connection_capacity[connection] += 1
+
+    def move(self) -> None:
+        for drone in self.request.keys():
+            self.zone_stat[drone.current_zone].remove(drone)
+            drone.came_from.append(drone.current_zone)
+            drone.current_zone = self.request[drone]
+            self.zone_stat[drone.current_zone].append(drone)
+            self.drones_stat[drone].popleft()
+
+    def simulation(self) -> None:
+        # scanning, collecting paths and filling request and
+        for drone in self.drones_stat.keys():
+            union = list(set(self.blocked) | set(drone.came_from))
+            self.drones_stat[drone] = deque(
+                dijkstra(drone, union, self.graph)
+                )
+
+        # update all next moves, check based on availability
+        self.next_move()
+
+        # now move
+        self.move()
+        # by now request is full and updated and drones_stat also full
+        # scheduling next executuion after 1 second
+        threading.Timer(1.0, self.simulation).start()
+
+    def run(self) -> None:
+        # start loop
+        self.simulation()
+
+        # keep the main thread alive
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            pass
+
+        # zone_occupancy is temporary. zone stat is permanent.
+        # where i create the optimized requests before the move
+
+    def abs_distance(self, x: int, y: int) -> float:
+        return (
+            math.sqrt(
+                (x - self.graph.start_hub.coordinates[0])**2 +
+                (y - self.graph.start_hub.coordinates[1])**2
+            ))
+
+    # def optimization(self) -> None:
+    #     self.request = dict(sorted(
+    #         self.request.items(),
+    #         key=lambda x: self.abs_distance(
+    #             x[0].current_zone.coordinates[0],
+    #             x[0].current_zone.coordinates[1]), reverse=True
+    #     ))
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+# s
+
 # UNCOMMENT ABOVE ALL!!!! also optimization and move
 # function sorts the drones based on which one is closer to the end_hub
 # should also consider priority
-# @staticmethod
-# def optimization(requests: list[Zone]) -> list[Zone]:
-#     requests = sorted[
-#       requests, key=lambda x: x[drone].coordinates, reverse=True
-#     ]
-#     return requests
 
 # moves the drones: change current to next and add current to came_from
-
-# import threading
-# import time
-
-# def run_code():
-#     # Your code here
-#     print(f"Running at {time.strftime('%X')}")
-
-#     # Schedule the next execution after 1 second
-#     threading.Timer(1.0, run_code).start()
-
-# # Start the loop
-# run_code()
-
-# # Keep the main thread alive
-# try:
-#     while True:
-#         time.sleep(1)
-# except KeyboardInterrupt:
-#     pass
-
 
 # You are basically thinking:
 
@@ -132,8 +222,8 @@
 #     next_zone = path[1]
 
 # check all requested moves:
-#     is zone capacity available?
-#     is connection capacity available?
+#     is zone zone_occupancy available?
+#     is connection zone_occupancy available?
 
 # allow:
 #     move drone
@@ -149,7 +239,7 @@
 
 # Example:
 
-# Zone B capacity = 1
+# Zone B zone_occupancy = 1
 
 # Drone A wants:
 # A -> B
@@ -196,7 +286,7 @@
 
 # How many drones want B?
 
-# capacity(B) = 1
+# zone_occupancy(B) = 1
 # requests(B) = 2
 
 # Then decide:
@@ -213,12 +303,12 @@
 # drone.current_zone = next_zone
 # zone_stat[next_zone] += 1
 
-# This also solves your connection capacity problem.
+# This also solves your connection zone_occupancy problem.
 
 # Example:
 
 # A ===== B
-# connection capacity = 1
+# connection zone_occupancy = 1
 
 # Requests:
 

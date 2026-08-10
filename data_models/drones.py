@@ -7,12 +7,12 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:33:02 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/08 14:56:46 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/10 17:01:18 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 from data_models.zone import Zone
-# from data_models.connection import Connection
+from data_models.connection import Connection
 
 
 class Drone:
@@ -22,9 +22,32 @@ class Drone:
         # zone_path: list[Zone]
     ) -> None:
 
-        self.current_zone = current_zone
+        self.current_zone: Zone = current_zone
         # self.zone_path = zone_path
         self.came_from = came_from
+
+        # transit state
+        self.current_connection: Connection | None = None
+        self.destination: Zone | None = None
+        self.turns_remaining = 0
+
+    def start_transit(
+        self, connection: Connection,
+        destination: Zone
+    ) -> None:
+        self.current_connection = connection
+        self.destination = destination
+        self.turns_remaining = 2
+
+    def update_transit(self) -> None:
+        self.turns_remaining -= 1
+
+        if self.turns_remaining == 0:
+            if self.destination is not None:
+                self.current_zone = self.destination
+
+            self.current_connection = None
+            self.destination = None
 
     # def __str__(self) -> str:
     #     return (
