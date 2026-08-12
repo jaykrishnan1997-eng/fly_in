@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/12 14:30:40 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/12 14:42:03 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -171,6 +171,9 @@ class Engine:
         self.move()
         # by now request is full and updated and drones_stat also full
         # scheduling next executuion after 1 second
+        if len(self.zone_stat[self.graph.end_hub]) == len(self.drones_stat):
+            print("OK")
+            sys.exit()
         threading.Timer(1.0, self.simulation).start()
 
     def run(self) -> None:
