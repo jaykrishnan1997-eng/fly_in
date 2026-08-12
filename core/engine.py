@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/12 14:53:23 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/12 15:13:53 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -48,7 +48,7 @@ class Engine:
         self.connection_capacity: dict[Connection, int] = {}
 
         self.blocked: list[Zone] = [
-            zone for zone in self.graph.zones if zone.cost != sys.maxsize]
+            zone for zone in self.graph.zones if zone.cost == sys.maxsize]
 
     def next_move(self) -> None:
         self.request = {}
@@ -157,6 +157,7 @@ class Engine:
                     self.drones_stat[drone].popleft()
 
     def simulation(self) -> None:
+        # print(self.zone_stat[self.graph.end_hub])
         # scanning, collecting paths and filling request and
         for drone in self.drones_stat.keys():
             if drone.current_connection is None:
@@ -164,9 +165,10 @@ class Engine:
                 self.drones_stat[drone] = deque(
                     dijkstra(drone, union, self.graph)
                     )
+            # print(self.drones_stat[drone])
         # update all next moves, check based on availability
         self.next_move()
-
+        print(self.request)
         # now move
         self.move()
         # by now request is full and updated and drones_stat also full

@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 10:55:37 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/08 12:05:41 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/12 15:10:03 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -80,53 +80,3 @@ def dijkstra(
     path.append(graph.start_hub)
     path.reverse()
     return path
-
-
-# def cost(
-#     zones: Zone, connection: Connection
-# ) -> dict[Connection: Callable, list[int, int]]:
-#     # cost is a dict with connection object,
-#     # list with cost of end zone and max capacity of that particular line
-#     cost_dictionary: dict[Connection, list[int, int]] = {}
-#     for line in connection:
-#         cost.append(
-#             line,
-#             [Zone.ZONE_COSTS[line.zone_b.type], line.max_link_capacity]
-#         )
-#     return cost_dictionary
-# def solver(self, graph: Graph) -> None:
-#     cost_dictionary: dict[Connection: Callable,
-#  list[int, int]] = cost(graph.zones, graph.connections)
-#     dijkstra()
-# cost, prev_zone = cost_stat[zone]
-
-
-# start = self._entry_coord
-# end = self._exit_coord
-# queue = deque([start])
-# visited = {start}
-# came_from: dict[tuple[int, int], tuple[tuple[int, int], str]] = {}
-
-# while queue:
-#     current = queue.popleft()
-#     if current == end:
-#         break
-#     x, y = current
-#     for dir, bit, (dx, dy) in DIRECTIONS:
-#         # open wall check. if yes wall is open so walkable
-#         if self._grid[y][x] & bit == 0:
-#             neighbor = (x + dx, y + dy)
-#             # skipping off grid (entry and exit doorway)
-#             if not (
-#                 0 <= neighbor[0] < self._width and
-#                 0 <= neighbor[1] < self._height
-#             ):
-#                 continue
-#             if neighbor not in visited:
-#                 visited.add(neighbor)
-#                 queue.append(neighbor)
-#                 came_from[neighbor] = (current, dir)
-
-# if end not in came_from and start != end:
-#     raise ValueError(f"No path found between {start} and {end}")
-# return came_from`
