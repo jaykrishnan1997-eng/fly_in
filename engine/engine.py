@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/10 17:05:34 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/12 14:30:40 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -50,16 +50,6 @@ class Engine:
         self.blocked: list[Zone] = [
             zone for zone in self.graph.zones if zone.cost != sys.maxsize]
 
-    def get_connection(self, zone_a: Zone, zone_b: Zone) -> Connection | None:
-        for connection in self.graph.connections:
-            if (
-                (connection.zone_a == zone_a and connection.zone_b == zone_b)
-                or
-                (connection.zone_a == zone_b and connection.zone_b == zone_a)
-            ):
-                return connection
-        return None
-
     def next_move(self) -> None:
         self.request = {}
 
@@ -77,7 +67,7 @@ class Engine:
             connection: len(self.connection_stat[connection])
             for connection in self.graph.connections
         }
-        # optimization
+        # optimization, further one more priority
         drones = sorted(
             self.drones_stat.keys(),
             key=lambda drone: self.abs_distance(
@@ -92,7 +82,8 @@ class Engine:
 
             next_zone = self.drones_stat[drone][1]
             current_zone = drone.current_zone
-            connection = self.get_connection(current_zone, next_zone)
+            connection = self.graph.get_connection(current_zone, next_zone)
+
             if (
                 ((
                     self.zone_occupancy[next_zone]
@@ -102,27 +93,77 @@ class Engine:
                 and self.connection_capacity[connection]
                 < connection.max_link_capacity
             ):
-                self.request[drone] = next_zone
-                self.zone_occupancy[next_zone] += 1
-                self.zone_outgoing[current_zone] += 1
-                self.connection_capacity[connection] += 1
+                # normal transit
+                if next_zone.cost == 1:
+                    self.request[drone] = next_zone
+                    self.zone_occupancy[next_zone] += 1
+                    self.zone_outgoing[current_zone] += 1
+                    self.connection_capacity[connection] += 1
+
+                # special transit
+                elif next_zone.cost < sys.maxsize and next_zone.cost > 1:
+                    # towars the destination
+                    if drone.current_connection is None:
+                        self.request[drone] = next_zone
+                        self.zone_outgoing[current_zone] += 1
+                        self.connection_capacity[connection] += 1
+                        self.connection_stat[connection].append(drone)
+
+                    # towards the connection
+                    else:
+                        self.request[drone] = next_zone
+                        self.zone_occupancy[next_zone] += 1
+                        self.zone_outgoing[current_zone] += 1
+                        # self.connection_capacity[connection] -= 1
+                        # self.connection_stat[connection].remove(drone)
 
     def move(self) -> None:
+        # transit_drones = []
+        # for transit in self.connection_stat.values():
+        #     for d in transit:
+        #         transit_drones.append(d)
+
         for drone in self.request.keys():
+            expense = self.drones_stat[drone][1].cost
             self.zone_stat[drone.current_zone].remove(drone)
             drone.came_from.append(drone.current_zone)
-            drone.current_zone = self.request[drone]
-            self.zone_stat[drone.current_zone].append(drone)
-            self.drones_stat[drone].popleft()
+
+            # cost 1: direct transit
+            if expense == 1:
+                drone.current_zone = self.request[drone]
+                self.zone_stat[drone.current_zone].append(drone)
+                self.drones_stat[drone].popleft()
+
+            # transit into the connection
+            elif (
+                expense > 1
+                and expense < sys.maxsize
+                and drone.current_connection is None
+            ):
+                # this will start transit, set current_connection and
+                # set destination
+                connection = self.graph.get_connection(
+                        drone.current_zone, self.request[drone])
+                if connection is not None:
+                    drone.start_transit(connection, self.request[drone])
+                    self.connection_stat[connection].append(drone)
+                else:
+                    raise ValueError
+            # transit from connection into the destination zone
+            else:
+                drone.update_transit()
+                if drone.current_connection is None:
+                    self.zone_stat[drone.current_zone].append(drone)
+                    self.drones_stat[drone].popleft()
 
     def simulation(self) -> None:
         # scanning, collecting paths and filling request and
         for drone in self.drones_stat.keys():
-            union = list(set(self.blocked) | set(drone.came_from))
-            self.drones_stat[drone] = deque(
-                dijkstra(drone, union, self.graph)
-                )
-
+            if drone.current_connection is None:
+                union = list(set(self.blocked) | set(drone.came_from))
+                self.drones_stat[drone] = deque(
+                    dijkstra(drone, union, self.graph)
+                    )
         # update all next moves, check based on availability
         self.next_move()
 

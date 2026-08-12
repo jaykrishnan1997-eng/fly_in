@@ -109,6 +109,32 @@ Total drones: 25
  - Now the drones when on transit must wait. So how can i include that also while making a move.
  - Drones was updated to include transit info when transiting through connection. This is better than choosing a seperate class. Now must include transit and update transit into code when zone is restricted.
 
+ # Day 8[Aug 12]
+
+ - icorporating drone transit info into the engine. Q. Where all should i include it on next_move and in move.
+ - made sure to include the branch for transit in move, simulation and next_move. Also updated graph to include get_connnection and bit more additions:
+
+ # status:  Resolved / traced correct:
+
+ - Zone/Connection/Drone/Graph/Parser classes — done
+ - Dijkstra core algorithm — heap persistence, tuple pushes, cost accumulation, finalized-zone handling all fixed
+ - Zone-type cost mapping (normal=1, priority=1, restricted=2, blocked=impassable) — clarified against spec
+ - Restricted-zone transit mechanic (start_transit/update_transit on Drone) — timing fixed (1 turn_remaining, single update_transit() call lands correctly)
+ - Engine.next_move() — distinguishes normal moves vs. transit-start vs. already-transiting drones; capacity/occupancy bookkeeping for each case
+ - Engine.move() — three branches (direct move, start transit, complete transit) all wired to update zone_stat, connection_stat, and drones_stat consistently
+ - Engine.simulation() — skips redundant dijkstra() recompute for drones mid-transit
+
+  # Not yet checked/still open:
+
+  - No actual end-to-end run against a real map file yet — everything so far has been traced by hand/logically, not executed
+  next_move()'s priority sorting (abs_distance from start hub) — - - functionally wired, but worth confirming it's actually the tiebreak/prioritization behavior you want under real contention
+  - The run() / threading.Timer real-time-loop design — flagged early on as a bigger design question (real-time delay vs. synchronous turn loop) that hasn't been revisited
+  - Zone occupancy edge cases from the spec (start/end zone exceptions, max_drones at non-default zones) — not specifically traced yet
+  - Output format (D<ID>-<zone> / D<ID>-<connection> turn log) — no code for this yet, per what's been shown
+  - Parser error handling completeness (line numbers, all invalid-input cases) — not touched in recent messages
+  Visual representation (terminal/graphical) — not started
+  - Tests — not started
+  - README — not started
 
  # #########################
  # Doomsday

@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/04 19:46:41 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/05 11:03:45 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/12 14:19:53 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -29,6 +29,16 @@ class Graph:
         self.start_hub = start_hub
         self.end_hub = end_hub
         self.total_drones = total_drones
+
+    def get_connection(self, z_a: Zone, z_b: Zone) -> Connection | None:
+        for connection in self.connections:
+            if (
+                (connection.zone_a == z_a and connection.zone_b == z_b)
+                or
+                (connection.zone_a == z_b and connection.zone_b == z_a)
+            ):
+                return connection
+        return None
 
     def __str__(self) -> str:
         nb_zones = len(self.zones)

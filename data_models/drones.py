@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:33:02 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/10 17:01:18 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/12 13:55:07 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -37,7 +37,7 @@ class Drone:
     ) -> None:
         self.current_connection = connection
         self.destination = destination
-        self.turns_remaining = 2
+        self.turns_remaining = destination.cost - 1
 
     def update_transit(self) -> None:
         self.turns_remaining -= 1
