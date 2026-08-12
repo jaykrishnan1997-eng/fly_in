@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:17:07 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/12 14:45:46 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/12 14:51:42 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -25,7 +25,7 @@ def main() -> None:
     parsed = Parser(sys.argv[1])
     graph_object = parsed.parser()
     machine = Engine(graph_object)
-    machine.run
+    machine.run()
 
 
 if __name__ == "__main__":
