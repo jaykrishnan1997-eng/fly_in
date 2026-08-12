@@ -7,12 +7,13 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:17:07 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/07 14:11:56 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/12 14:45:46 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import sys
 from parser.map_parser import Parser
+from core.engine import Engine
 import traceback
 
 
@@ -23,8 +24,8 @@ def main() -> None:
 
     parsed = Parser(sys.argv[1])
     graph_object = parsed.parser()
-    print(graph_object)
-    # core = engine(graph_object)
+    machine = Engine(graph_object)
+    machine.run
 
 
 if __name__ == "__main__":
