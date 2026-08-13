@@ -136,6 +136,12 @@ Total drones: 25
   - Tests — not started
   - README — not started
 
+  # Day 9[Aug 13]
+
+  - the drone stats is not getting updated, thats its same after every case. so it goes in a loop
+  - exact point of fucked up, spoted. it is the if loop where the calculation of capacity - outgoing drone - incoming drone ... i gave an else ccondition and found out the if condition is only working once in the beginning and it reverts back. 
+
+
  # #########################
  # Doomsday
 

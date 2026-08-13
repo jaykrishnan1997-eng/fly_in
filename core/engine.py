@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/12 15:13:53 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/13 12:31:45 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -74,14 +74,14 @@ class Engine:
                 drone.current_zone.coordinates[0],
                 drone.current_zone.coordinates[1]), reverse=True
         )
-
+        # print(drones)
         for drone in drones:
             if len(self.drones_stat[drone]) <= 1:
                 # drone at destination
                 continue
 
             next_zone = self.drones_stat[drone][1]
-            current_zone = drone.current_zone
+            current_zone = self.drones_stat[drone][0]
             connection = self.graph.get_connection(current_zone, next_zone)
 
             if (
@@ -116,6 +116,8 @@ class Engine:
                         self.zone_outgoing[current_zone] += 1
                         # self.connection_capacity[connection] -= 1
                         # self.connection_stat[connection].remove(drone)
+            else:
+                print("Something fucked up in the calculations")
 
     def move(self) -> None:
         # transit_drones = []
@@ -168,7 +170,7 @@ class Engine:
             # print(self.drones_stat[drone])
         # update all next moves, check based on availability
         self.next_move()
-        print(self.request)
+        # print(self.drones_stat)
         # now move
         self.move()
         # by now request is full and updated and drones_stat also full
