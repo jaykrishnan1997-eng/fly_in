@@ -4,17 +4,16 @@
 #                                                          :::      ::::::::  #
 #   engine.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/13 16:14:54 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/13 21:20:08 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import sys
 import time
 import math
-import threading
 from collections import deque
 from data_models.zone import Zone
 from data_models.graph import Graph
@@ -86,23 +85,6 @@ class Engine:
             current_zone = drone.current_zone
             connection = self.graph.get_connection(current_zone, next_zone)
 
-        # testing
-            # print("current zone: ", current_zone)
-            # print("path length od drone:", len(self.drones_stat[drone]))
-
-            # print(
-            #   "self.zone_occupancy[next_zone]:",
-            #   self.zone_occupancy[next_zone])
-            # print(
-            #   "self.zone_outgoing[next_zone]:",
-            #    self.zone_outgoing[next_zone])
-            # print("next_zone.max_drones:", next_zone.max_drones)
-            # print(connection)
-            # print(self.connection_capacity[connection])
-            # print(connection.max_link_capacity)
-
-        # end of testing
-
             if (
                 ((
                     self.zone_occupancy[next_zone]
@@ -126,7 +108,7 @@ class Engine:
                         self.request[drone] = next_zone
                         self.zone_outgoing[current_zone] += 1
                         self.connection_capacity[connection] += 1
-                        self.connection_stat[connection].append(drone)
+                        # self.connection_stat[connection].append(drone)
 
                     # towards the connection
                     else:
@@ -136,13 +118,9 @@ class Engine:
                         # self.connection_capacity[connection] -= 1
                         # self.connection_stat[connection].remove(drone)
             else:
-                print("Something fucked up in the calculations")
+                print("Move blocked")
 
     def move(self) -> None:
-        # transit_drones = []
-        # for transit in self.connection_stat.values():
-        #     for d in transit:
-        #         transit_drones.append(d)
 
         for drone in self.request.keys():
             expense = self.drones_stat[drone][1].cost
@@ -172,46 +150,49 @@ class Engine:
                     raise ValueError
             # transit from connection into the destination zone
             else:
+                connection = drone.current_connection
                 drone.update_transit()
+
                 if drone.current_connection is None:
                     self.zone_stat[drone.current_zone].append(drone)
                     self.drones_stat[drone].popleft()
 
+                    connection = self.graph.get_connection(
+                        drone.came_from[-1],
+                        drone.current_zone
+                    )
+                    if connection is not None:
+                        self.connection_stat[connection].remove(drone)
+
     def simulation(self) -> None:
-        # print(self.zone_stat[self.graph.end_hub])
-        # scanning, collecting paths and filling request and
+
         for drone in self.drones_stat.keys():
             if drone.current_connection is None:
                 union = list(set(self.blocked) | set(drone.came_from))
-                self.drones_stat[drone] = deque(
-                    dijkstra(drone, union, self.graph)
-                    )
+                path = dijkstra(drone, union, self.graph)
+                print("CURRENT:", drone.current_zone)
+                print("PATH:", path)
+
+                self.drones_stat[drone] = deque(path)
             # print(self.drones_stat[drone])
         # update all next moves, check based on availability
         self.next_move()
         print(self.request)
         # now move
         self.move()
-        # by now request is full and updated and drones_stat also full
-        # scheduling next executuion after 1 second
-        if len(self.zone_stat[self.graph.end_hub]) == len(self.drones_stat):
-            print("OK")
-            sys.exit()
-        threading.Timer(1.0, self.simulation).start()
 
     def run(self) -> None:
-        # start loop
-        self.simulation()
+        while True:
+            # start loop
+            self.simulation()
 
-        # keep the main thread alive
-        try:
-            while True:
-                time.sleep(1)
-        except KeyboardInterrupt:
-            pass
+            if (
+                (len(self.zone_stat[self.graph.end_hub])
+                 == len(self.drones_stat))):
+                print("OK")
+                break
 
-        # zone_occupancy is temporary. zone stat is permanent.
-        # where i create the optimized requests before the move
+            time.sleep(1)
 
     def abs_distance(self, x: int, y: int) -> float:
         return (
