@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/13 12:31:45 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/13 16:14:54 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -51,6 +51,7 @@ class Engine:
             zone for zone in self.graph.zones if zone.cost == sys.maxsize]
 
     def next_move(self) -> None:
+
         self.request = {}
 
         self.zone_outgoing = {
@@ -76,13 +77,31 @@ class Engine:
         )
         # print(drones)
         for drone in drones:
+
             if len(self.drones_stat[drone]) <= 1:
                 # drone at destination
                 continue
 
             next_zone = self.drones_stat[drone][1]
-            current_zone = self.drones_stat[drone][0]
+            current_zone = drone.current_zone
             connection = self.graph.get_connection(current_zone, next_zone)
+
+        # testing
+            # print("current zone: ", current_zone)
+            # print("path length od drone:", len(self.drones_stat[drone]))
+
+            # print(
+            #   "self.zone_occupancy[next_zone]:",
+            #   self.zone_occupancy[next_zone])
+            # print(
+            #   "self.zone_outgoing[next_zone]:",
+            #    self.zone_outgoing[next_zone])
+            # print("next_zone.max_drones:", next_zone.max_drones)
+            # print(connection)
+            # print(self.connection_capacity[connection])
+            # print(connection.max_link_capacity)
+
+        # end of testing
 
             if (
                 ((
@@ -170,7 +189,7 @@ class Engine:
             # print(self.drones_stat[drone])
         # update all next moves, check based on availability
         self.next_move()
-        # print(self.drones_stat)
+        print(self.request)
         # now move
         self.move()
         # by now request is full and updated and drones_stat also full

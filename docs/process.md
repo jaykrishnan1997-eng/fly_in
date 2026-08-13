@@ -140,9 +140,82 @@ Total drones: 25
 
   - the drone stats is not getting updated, thats its same after every case. so it goes in a loop
   - exact point of fucked up, spoted. it is the if loop where the calculation of capacity - outgoing drone - incoming drone ... i gave an else ccondition and found out the if condition is only working once in the beginning and it reverts back. 
+  - this bug was a bit confusing, used claude to pinpoint the error.
+  - if two drones want to occupy same spot how is the choice. This issue is at next_move once a drone needs a zone the next available zone must be given for the other drone. This is not happening right now. may be zone not in request.values()
 
 
  # #########################
  # Doomsday
 
  - The sun is down. My device battery is low. I dont know how long i can keep myself alive. Tell my future wife and kids that i love them.
+
+# #############################ERROR
+
+┬─[jkrishna@3-I-5:~/C/L/fly-in]─[04:05:34 PM]─[G:master=]
+╰─>$ python3 main.py maps/easy/01_linear_path.txt
+current zone:  name: start
+coordinates: (0, 0)
+type: normal
+color: green
+maximum occupancy: 2
+
+path length od drone: 4
+self.zone_occupancy[next_zone]: 0
+self.zone_outgoing[next_zone]: 0
+next_zone.max_drones: 1
+current zone:  name: start
+coordinates: (0, 0)
+type: normal
+color: green
+maximum occupancy: 2
+
+path length od drone: 4
+self.zone_occupancy[next_zone]: 1
+self.zone_outgoing[next_zone]: 0
+next_zone.max_drones: 1
+Something fucked up in the calculations
+current zone:  name: waypoint1
+coordinates: (1, 0)
+type: normal
+color: blue
+maximum occupancy: 1
+
+path length od drone: 4
+self.zone_occupancy[next_zone]: 1
+self.zone_outgoing[next_zone]: 0
+next_zone.max_drones: 1
+Something fucked up in the calculations
+current zone:  name: start
+coordinates: (0, 0)
+type: normal
+color: green
+maximum occupancy: 2
+
+path length od drone: 4
+self.zone_occupancy[next_zone]: 1
+self.zone_outgoing[next_zone]: 0
+next_zone.max_drones: 1
+Something fucked up in the calculations
+current zone:  name: waypoint1
+coordinates: (1, 0)
+type: normal
+color: blue
+maximum occupancy: 1
+
+path length od drone: 4
+self.zone_occupancy[next_zone]: 1
+self.zone_outgoing[next_zone]: 0
+next_zone.max_drones: 1
+Something fucked up in the calculations
+current zone:  name: start
+coordinates: (0, 0)
+type: normal
+color: green
+maximum occupancy: 2
+
+path length od drone: 4
+self.zone_occupancy[next_zone]: 1
+self.zone_outgoing[next_zone]: 0
+next_zone.max_drones: 1
+Something fucked up in the calculations
+^Zfish: Job 1, 'python3 main.py maps/easy/01_li…' has stopped
