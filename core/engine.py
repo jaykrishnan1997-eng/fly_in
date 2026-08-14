@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   engine.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/13 21:20:08 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/14 13:36:50 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -77,6 +77,9 @@ class Engine:
         # print(drones)
         for drone in drones:
 
+            if drone.current_connection is not None:
+                continue
+
             if len(self.drones_stat[drone]) <= 1:
                 # drone at destination
                 continue
@@ -121,8 +124,25 @@ class Engine:
                 print("Move blocked")
 
     def move(self) -> None:
-
+        # import pdb
+        # pdb.set_trace()
         for drone in self.request.keys():
+
+            # if drone.current_connection is not None:
+            #     drone.update_transit()
+
+            #     if drone.current_connection is None:
+            #         self.zone_stat[drone.current_zone].append(drone)
+            #         self.drones_stat[drone].popleft()
+
+            #         connection = self.graph.get_connection(
+            #             drone.came_from[-1],
+            #             drone.current_zone
+            #         )
+
+            #         if connection is not None:
+            #             self.connection_stat[connection].remove(drone)
+
             expense = self.drones_stat[drone][1].cost
             self.zone_stat[drone.current_zone].remove(drone)
             drone.came_from.append(drone.current_zone)
@@ -177,7 +197,8 @@ class Engine:
             # print(self.drones_stat[drone])
         # update all next moves, check based on availability
         self.next_move()
-        print(self.request)
+        # print(self.request)
+        # print(self.zone_stat)
         # now move
         self.move()
 
