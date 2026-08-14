@@ -130,7 +130,7 @@ Total drones: 25
   - fixed the bug that drones already inside a connection were never being advanced.
   - now all the map cases works and now will be time to focus on the output.
   - two function added to print the output per tick, also updated drones and connections to include aname attribute, so that mypy wont cry.
-
+  - TO DO: if i do duplicates of say nb_drones it accepts the second value. This is a bug must modify parser, start with graphics, Also bug or not the satrting point of a drone is not shown. like D1-start_hub. May be this is not important but worth checking. 
 
  # #########################
  # Doomsday

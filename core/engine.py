@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/14 15:27:54 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/14 15:45:15 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -205,7 +205,7 @@ class Engine:
             if (
                 (len(self.zone_stat[self.graph.end_hub])
                  == len(self.drones_stat))):
-                print("OK")
+                # print("OK")
                 break
 
             time.sleep(1)
