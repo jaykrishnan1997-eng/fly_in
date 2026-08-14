@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/14 13:36:50 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/14 15:27:54 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -35,7 +35,7 @@ class Engine:
             if zone == self.graph.start_hub:
                 self.zone_stat[zone] = []
                 for a in range(0, self.graph.total_drones):
-                    drone = Drone(self.graph.start_hub, [])
+                    drone = Drone(self.graph.start_hub, [], a + 1)
                     self.zone_stat[zone].append(drone)
                     self.drones_stat[drone] = deque()
             else:
@@ -118,31 +118,34 @@ class Engine:
                         self.request[drone] = next_zone
                         self.zone_occupancy[next_zone] += 1
                         self.zone_outgoing[current_zone] += 1
-                        # self.connection_capacity[connection] -= 1
-                        # self.connection_stat[connection].remove(drone)
-            else:
-                print("Move blocked")
 
-    def move(self) -> None:
+    def get_movement_destination(self, drone: Drone) -> str:
+        if drone.current_connection is not None:
+            return drone.current_connection.name
+
+        return drone.current_zone.name
+
+    def move(self) -> dict[Drone, str]:
         # import pdb
         # pdb.set_trace()
+        movements = {}
+        for drone in self.drones_stat.keys():
+            if drone.current_connection is not None:
+                drone.update_transit()
+
+                if drone.current_connection is None:
+                    self.zone_stat[drone.current_zone].append(drone)
+                    self.drones_stat[drone].popleft()
+
+                    connection = self.graph.get_connection(
+                        drone.came_from[-1],
+                        drone.current_zone
+                    )
+
+                    if connection is not None:
+                        self.connection_stat[connection].remove(drone)
+
         for drone in self.request.keys():
-
-            # if drone.current_connection is not None:
-            #     drone.update_transit()
-
-            #     if drone.current_connection is None:
-            #         self.zone_stat[drone.current_zone].append(drone)
-            #         self.drones_stat[drone].popleft()
-
-            #         connection = self.graph.get_connection(
-            #             drone.came_from[-1],
-            #             drone.current_zone
-            #         )
-
-            #         if connection is not None:
-            #             self.connection_stat[connection].remove(drone)
-
             expense = self.drones_stat[drone][1].cost
             self.zone_stat[drone.current_zone].remove(drone)
             drone.came_from.append(drone.current_zone)
@@ -168,21 +171,17 @@ class Engine:
                     self.connection_stat[connection].append(drone)
                 else:
                     raise ValueError
-            # transit from connection into the destination zone
-            else:
-                connection = drone.current_connection
-                drone.update_transit()
+            movements[drone] = self.get_movement_destination(drone)
 
-                if drone.current_connection is None:
-                    self.zone_stat[drone.current_zone].append(drone)
-                    self.drones_stat[drone].popleft()
+        return movements
 
-                    connection = self.graph.get_connection(
-                        drone.came_from[-1],
-                        drone.current_zone
-                    )
-                    if connection is not None:
-                        self.connection_stat[connection].remove(drone)
+    def print_turn(self, movements: dict[Drone, str]) -> None:
+        output = []
+
+        for drone, destination in movements.items():
+            output.append(f"D{drone.id}-{destination}")
+
+        print(" ".join(output))
 
     def simulation(self) -> None:
 
@@ -190,21 +189,17 @@ class Engine:
             if drone.current_connection is None:
                 union = list(set(self.blocked) | set(drone.came_from))
                 path = dijkstra(drone, union, self.graph)
-                print("CURRENT:", drone.current_zone)
-                print("PATH:", path)
 
                 self.drones_stat[drone] = deque(path)
-            # print(self.drones_stat[drone])
-        # update all next moves, check based on availability
+
         self.next_move()
-        # print(self.request)
-        # print(self.zone_stat)
-        # now move
-        self.move()
+
+        movements = self.move()
+        self.print_turn(movements)
 
     def run(self) -> None:
         while True:
-            # start loop
+            # start loop and one turn at a time
             self.simulation()
 
             if (

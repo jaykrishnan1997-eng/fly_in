@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/04 16:45:46 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/07 14:18:17 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/14 15:18:17 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -16,11 +16,13 @@ from data_models.zone import Zone
 
 class Connection:
     def __init__(
-        self, zone_a: Zone,
+        self,
+        zone_a: Zone,
         zone_b: Zone,
         max_link_capacity: int = 1
     ) -> None:
 
+        self.name = f"{zone_a.name}-{zone_b.name}"
         self.zone_a = zone_a
         self.zone_b = zone_b
         self.max_link_capacity = max_link_capacity

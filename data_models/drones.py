@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:33:02 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/12 13:55:07 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/14 15:11:01 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -19,9 +19,10 @@ class Drone:
     def __init__(
         self, current_zone: Zone,
         came_from: list[Zone],
-        # zone_path: list[Zone]
+        drone_id: int
     ) -> None:
 
+        self.id = drone_id
         self.current_zone: Zone = current_zone
         # self.zone_path = zone_path
         self.came_from = came_from
