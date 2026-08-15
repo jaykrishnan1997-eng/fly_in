@@ -132,6 +132,9 @@ Total drones: 25
   - two function added to print the output per tick, also updated drones and connections to include aname attribute, so that mypy wont cry.
   - TO DO: if i do duplicates of say nb_drones it accepts the second value. This is a bug must modify parser, start with graphics, Also bug or not the satrting point of a drone is not shown. like D1-start_hub. May be this is not important but worth checking. 
 
+  # Tag Elf[Aug funfzehn]
+  - Ich habe mit meiner Makefile begonnen, damit ich die virtuelle Umgebung nicht jedes Mal erstellen und Rich installieren muss.
+
  # #########################
  # Doomsday
 
@@ -159,3 +162,4 @@ Total drones: 25
   Visual representation (terminal/graphical) — not started
   - Tests — not started
   - README — not started
+ - Do i need to submit uv.lock or not ?

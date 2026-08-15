@@ -1,55 +1,49 @@
-# .PHONY: install run debug clean fclean lint lint-strict
+UV := uv
+MAIN := main.py
+VENV := .venv
+MAP ?= maps/medium/02_circular_loop.txt
+PYTHON := python
 
-# PYTHON = python3
-# MAIN = main.py
+.PHONY: install activate run debug clean fclean lint lint-strict
 
-# install:
-# 	$(PYTHON) -m pip install build
-# 	$(PYTHON) -m build
-# 	mv dist/* .
-# 	rmdir dist
-# 	$(PYTHON) -m pip install .
+install:
+	$(UV) sync
+	@echo "Virtual environment ready: $(VENV)"
 
-# run:
-# 	$(PYTHON) $(MAIN) config.txt
+activate: install
+	@SHELL_NAME=$$(basename "$$SHELL"); \
+	if [ -f "$(VENV)/bin/activate.$$SHELL_NAME" ]; then \
+		echo "Run: source $(VENV)/bin/activate.$$SHELL_NAME"; \
+	else \
+		echo "Run: source $(VENV)/bin/activate"; \
+	fi
 
-# debug:
-# 	$(PYTHON) -m pdb $(MAIN) config.txt
+run: install
+	$(UV) run $(PYTHON) $(MAIN) $(MAP)
 
-# clean:
-# 	find . -type d -name "__pycache__" -exec rm -rf {} +
-# 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
-# 	find . -name "*.pyc" -delete
-# 	rm -rf .pytest_cache
-# 	rm -rf maze.txt
+debug: install
+	$(UV) run $(PYTHON) -m pdb $(MAIN) $(MAP)
 
-# # used if u want to remove venv
-# fclean: clean
-# 	rm -rf build
-# 	rm -rf *.egg-info
-# 	rm -rf dist
-# 	rm -rf .venv
-# 	rm -rf venv
-# 	rm -rf *.tar.gz
-# 	rm -rf *.whl
+clean:
+	find . -type d -name "__pycache__" -exec rm -rf {} +
+	find . -type d -name ".mypy_cache" -exec rm -rf {} +
+	find . -type d -name ".pytest_cache" -exec rm -rf {} +
+	find . -name "*.pyc" -delete
 
-# lint:
-# 	flake8 . --exclude=.venv,venv
-# 	mypy . \
-# 		--warn-return-any \
-# 		--warn-unused-ignores \
-# 		--ignore-missing-imports \
-# 		--disallow-untyped-defs \
-# 		--check-untyped-defs
+# used if u want to remove venv
+fclean: clean
+	rm -rf $(VENV)
+# 	rm -f uv.lock
 
-# lint-strict:
-# 	flake8 . --exclude=.venv,venv
-# 	mypy . --strict
+lint:
+	$(UV) run flake8 . --exclude=.venv,venv
+	$(UV) run mypy . \
+		--warn-return-any \
+		--warn-unused-ignores \
+		--ignore-missing-imports \
+		--disallow-untyped-defs \
+		--check-untyped-defs
 
-# # python3 -m venv .venv
-# # source .venv/bin/activate
-# # make install
-# # make run
-# # make clean
-# # deactivate
-# # make fclean
+lint-strict:
+	$(UV) run flake8 . --exclude=.venv,venv
+	$(UV) run mypy . --strict
