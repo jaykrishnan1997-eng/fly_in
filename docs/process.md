@@ -135,6 +135,17 @@ Total drones: 25
   # Tag Elf[Aug funfzehn]
   - Ich habe mit meiner Makefile begonnen, damit ich die virtuelle Umgebung nicht jedes Mal erstellen und Rich installieren muss.
 
+  - For learnig rich i used chatgpt to give me references and resources to easily understand.
+  - started with rich.layout : https://youtu.be/NoYZtYBiYbo
+  - cloned rich and textual git(from the author itself) to junk_yard. Need to learn and try to implement this into mycode. especially the example fullscrren is similar to what i want.
+  - gits: Rich Update Announcement - https://www.willmcgugan.com/blog/tech...
+  Rich Library - https://github.com/willmcgugan/rich
+  Rich FullScreen Example - https://github.com/willmcgugan/rich/b...
+  Rich Layout Docs - https://rich.readthedocs.io/en/latest...
+
+  Please sponsor the developer if you use Rich and want to support the developer - https://github.com/sponsors/willmcgugan
+  
+
  # #########################
  # Doomsday
 
