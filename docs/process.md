@@ -148,6 +148,8 @@ Total drones: 25
   # Day 12[Aug 17]
   - I had a doubt on how the rich layout works for the visuals i want. So used AI(chatgpt) to understand size, ratio and definisions under rich.
   - A better visuals example was asked to be genereated by chatgpt and it also shows drones better seen
+  - Added ticks and total turns into the engine and connected to dasboard
+  - is a legend actually necessary in my case. Since every zone has its own colours and so on.
 
 # #############################ERROR
  # status:  Resolved / traced correct:
@@ -173,7 +175,8 @@ Total drones: 25
   - Tests — not started
   - README — not started
  - Do i need to submit uv.lock or not ?
-
+  - Remove the .yalm file that restricts your git push to be mypy and flake8 strict
+  - A choice to change the tick time?
 
 
  # #########################

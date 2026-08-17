@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/14 15:45:15 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/17 14:31:07 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -25,7 +25,8 @@ from data_models.connection import Connection
 class Engine:
     def __init__(self, graph: Graph):
         self.graph = graph
-
+        self.ticks: int = 0
+        self.total_turns: int = 0
         self.zone_stat: dict[Zone, list[Drone]] = {}
         self.drones_stat: dict[Drone, deque[Zone]] = {}
         self.connection_stat: dict[Connection, list[Drone]] = {}
@@ -48,6 +49,7 @@ class Engine:
 
         self.blocked: list[Zone] = [
             zone for zone in self.graph.zones if zone.cost == sys.maxsize]
+        self.waiting: list[Drone] = []
 
     def next_move(self) -> None:
 
@@ -128,6 +130,7 @@ class Engine:
     def move(self) -> dict[Drone, str]:
         # import pdb
         # pdb.set_trace()
+        self.waiting = []
         movements = {}
         for drone in self.drones_stat.keys():
             if drone.current_connection is not None:
@@ -147,6 +150,9 @@ class Engine:
 
         for drone in self.request.keys():
             expense = self.drones_stat[drone][1].cost
+
+            self.total_turns += expense
+
             self.zone_stat[drone.current_zone].remove(drone)
             drone.came_from.append(drone.current_zone)
 
@@ -172,6 +178,10 @@ class Engine:
                 else:
                     raise ValueError
             movements[drone] = self.get_movement_destination(drone)
+
+        for drone in self.drones_stat:
+            if drone not in self.request:
+                self.waiting.append(drone)
 
         return movements
 
@@ -201,6 +211,7 @@ class Engine:
         while True:
             # start loop and one turn at a time
             self.simulation()
+            self.ticks += 1
 
             if (
                 (len(self.zone_stat[self.graph.end_hub])
