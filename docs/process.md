@@ -145,11 +145,9 @@ Total drones: 25
 
   Please sponsor the developer if you use Rich and want to support the developer - https://github.com/sponsors/willmcgugan
   
-
- # #########################
- # Doomsday
-
- - The sun is down. My device battery is low. I dont know how long i can keep myself alive. Tell my future wife and kids that i love them.
+  # Day 12[Aug 17]
+  - I had a doubt on how the rich layout works for the visuals i want. So used AI(chatgpt) to understand size, ratio and definisions under rich.
+  - A better visuals example was asked to be genereated by chatgpt and it also shows drones better seen
 
 # #############################ERROR
  # status:  Resolved / traced correct:
@@ -171,6 +169,14 @@ Total drones: 25
   - Zone occupancy edge cases from the spec (start/end zone exceptions, max_drones at non-default zones) — not specifically traced yet
   - Parser error handling completeness (line numbers, all invalid-input cases) — not touched in recent messages
   Visual representation (terminal/graphical) — not started
+  - is there a check where when error happens the exact line of error should be shown?(Aug 17)
   - Tests — not started
   - README — not started
  - Do i need to submit uv.lock or not ?
+
+
+
+ # #########################
+ # Doomsday
+
+ - The sun is down. My device battery is low. I dont know how long i can keep myself alive. Tell my future wife and kids that i love them.
