@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   graph.py                                             :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/04 19:46:41 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/12 14:19:53 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/17 16:34:55 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -17,13 +17,16 @@ from data_models.connection import Connection
 
 class Graph:
     def __init__(
-        self, zones: list[Zone],
+        self,
+        map: str,
+        zones: list[Zone],
         connections: list[Connection],
         start_hub: Zone,
         end_hub: Zone,
         total_drones: int
     ) -> None:
 
+        self.map = map
         self.zones = zones
         self.connections = connections
         self.start_hub = start_hub

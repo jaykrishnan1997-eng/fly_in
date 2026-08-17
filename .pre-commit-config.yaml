@@ -9,3 +9,5 @@ repos:
     hooks:
       - id: mypy
         args: [--strict]
+        additional_dependencies:
+          - rich==13.7.1

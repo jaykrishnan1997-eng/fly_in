@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   engine.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/17 14:31:07 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/17 17:14:19 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -50,6 +50,7 @@ class Engine:
         self.blocked: list[Zone] = [
             zone for zone in self.graph.zones if zone.cost == sys.maxsize]
         self.waiting: list[Drone] = []
+        self.event_log: list[str] = []
 
     def next_move(self) -> None:
 
@@ -194,7 +195,7 @@ class Engine:
         print(" ".join(output))
 
     def simulation(self) -> None:
-
+        self.ticks += 1
         for drone in self.drones_stat.keys():
             if drone.current_connection is None:
                 union = list(set(self.blocked) | set(drone.came_from))
@@ -205,13 +206,20 @@ class Engine:
         self.next_move()
 
         movements = self.move()
+
+        self.event_log.append(
+            " ".join(
+                f"D{drone.id}-{destination}"
+                for drone, destination in movements.items()
+            )
+        )
+
         self.print_turn(movements)
 
     def run(self) -> None:
         while True:
             # start loop and one turn at a time
             self.simulation()
-            self.ticks += 1
 
             if (
                 (len(self.zone_stat[self.graph.end_hub])

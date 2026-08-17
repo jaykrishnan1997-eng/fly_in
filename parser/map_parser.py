@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   map_parser.py                                        :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:51:56 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/14 15:42:42 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/17 21:10:29 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -173,7 +173,12 @@ class Parser:
         zones = sorted(zones, key=lambda z: z.coordinates)
         try:
             graph_object: Graph = Graph(
-                zones, connections, start_hub, end_hub, nb_drones
+                self.path,
+                zones,
+                connections,
+                start_hub,
+                end_hub,
+                nb_drones
             )
         except Exception as e:
             raise ValueError(f"Error creating graph: {e}")
