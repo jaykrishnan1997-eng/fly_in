@@ -150,6 +150,14 @@ Total drones: 25
   - A better visuals example was asked to be genereated by chatgpt and it also shows drones better seen
   - Added ticks and total turns into the engine and connected to dasboard
   - is a legend actually necessary in my case. Since every zone has its own colours and so on.
+  - removed legend, added ticks and turns so that it can be displayed in the output.
+  ie, modified engine, visual_generator and graph.
+
+  # Day 13[Aug 18]
+  - Today i would like to finish map rendering and footer function implementation.
+  - asked chatgpt for refernce to learn proper rendering. Official resources are very short. So I learned how to use rich from chatgpt.
+
+
 
 # #############################ERROR
  # status:  Resolved / traced correct:

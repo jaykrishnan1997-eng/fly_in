@@ -7,14 +7,18 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:17:07 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/12 14:51:42 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/18 12:58:31 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 import sys
+import time
+import traceback
+
+from rich.live import Live
 from parser.map_parser import Parser
 from core.engine import Engine
-import traceback
+from visuals.visual_generator import Dashboard
 
 
 def main() -> None:
@@ -24,8 +28,22 @@ def main() -> None:
 
     parsed = Parser(sys.argv[1])
     graph_object = parsed.parser()
+
     machine = Engine(graph_object)
-    machine.run()
+    dashboard = Dashboard(machine)
+
+    with Live(
+        dashboard.layout,
+        refresh_per_second=10,
+        screen=True,
+    ) as live:
+        while not machine.is_finished():
+            machine.simulation()
+
+            dashboard.update()
+            live.update(dashboard.layout)
+
+            time.sleep(1)
 
 
 if __name__ == "__main__":

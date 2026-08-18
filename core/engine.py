@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   engine.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/17 17:14:19 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/18 12:58:21 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -193,6 +193,12 @@ class Engine:
             output.append(f"D{drone.id}-{destination}")
 
         print(" ".join(output))
+
+    def is_finished(self) -> bool:
+        return (
+            len(self.zone_stat[self.graph.end_hub])
+            == len(self.drones_stat)
+        )
 
     def simulation(self) -> None:
         self.ticks += 1
