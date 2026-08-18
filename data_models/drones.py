@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   drones.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:33:02 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/17 12:44:01 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/18 17:40:34 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -24,13 +24,16 @@ class Drone:
 
         self.id = drone_id
         self.current_zone: Zone = current_zone
-        # self.zone_path = zone_path
         self.came_from = came_from
 
         # transit state
         self.current_connection: Connection | None = None
         self.destination: Zone | None = None
         self.turns_remaining = 0
+
+        # visualization
+        self.previous_zone: Zone | None = None
+        self.visual_destination: Zone | None = None
 
     def start_transit(
         self, connection: Connection,

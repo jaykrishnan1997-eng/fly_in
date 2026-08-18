@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   engine.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/18 12:58:21 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/18 21:46:58 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -26,7 +26,7 @@ class Engine:
     def __init__(self, graph: Graph):
         self.graph = graph
         self.ticks: int = 0
-        self.total_turns: int = 0
+        self.total_path_cost: int = 0
         self.zone_stat: dict[Zone, list[Drone]] = {}
         self.drones_stat: dict[Drone, deque[Zone]] = {}
         self.connection_stat: dict[Connection, list[Drone]] = {}
@@ -152,7 +152,10 @@ class Engine:
         for drone in self.request.keys():
             expense = self.drones_stat[drone][1].cost
 
-            self.total_turns += expense
+            self.total_path_cost += expense
+
+            drone.previous_zone = drone.current_zone
+            drone.visual_destination = self.request[drone]
 
             self.zone_stat[drone.current_zone].remove(drone)
             drone.came_from.append(drone.current_zone)

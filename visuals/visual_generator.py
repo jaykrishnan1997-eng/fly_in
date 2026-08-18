@@ -4,18 +4,19 @@
 #                                                          :::      ::::::::  #
 #   visual_generator.py                                  :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/15 13:00:33 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/18 12:59:59 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/18 21:51:32 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
-# from datetime import datetime
+import sys
+import time
 from rich.layout import Layout
 from rich.panel import Panel
 from rich.table import Table
-# from rich.text import Text
+from rich.text import Text
 from core.engine import Engine
 
 # ┌──────────────────────────────────────────────────────────────┐
@@ -39,6 +40,18 @@ class Dashboard:
         self.engine = engine
         self.layout = self.make_layout()
         self.completed_drones: set[int] = set()
+
+        self.drone_colors = [
+            "red",
+            "blue",
+            "green",
+            "yellow",
+            "magenta",
+            "cyan",
+            "bright_red",
+            "bright_blue",
+            "bright_green",
+        ]
 
     def make_layout(self) -> Layout:
         """Define the layout."""
@@ -109,12 +122,12 @@ class Dashboard:
             str(self.engine.zone_occupancy[self.engine.graph.end_hub]),
         )
         table.add_row(
-            "Total Ticks",
+            "Total Turns",
             str(self.engine.ticks),
         )
         table.add_row(
-            "Total turns",
-            str(self.engine.total_turns),
+            "Total path_cost",
+            str(self.engine.total_path_cost),
         )
         return Panel(table, title="Simulation Summary")
 
@@ -181,9 +194,10 @@ class Dashboard:
         return Panel("Controls")
 
     # The core visual(the drones transit itself)
-    def make_map(self) -> Panel:
-        width = 42
-        height = 15
+    def make_map(self, progress: float = 1.0) -> Panel:
+        width = 70
+        height = 20
+
         padding = 2
 
         zones = self.engine.graph.zones
@@ -202,7 +216,7 @@ class Dashboard:
         y_range = max_y - min_y or 1
 
         # graph coordinates to screen coordinates
-        def scale_x(x: int) -> int:
+        def scale_x(x: float) -> int:
             return int(
                 (x - min_x) * ((width - 1) - (2 * padding))
                 / x_range
@@ -216,9 +230,11 @@ class Dashboard:
 
         # empty canvas
         canvas = [
-            [" " for _ in range(width)]
+            [Text(" ") for _ in range(width)]
             for _ in range(height)
         ]
+
+        # CONNECTION
 
         for connection in self.engine.graph.connections:
             x1 = scale_x(connection.zone_a.coordinates[0])
@@ -228,62 +244,163 @@ class Dashboard:
 
             if y1 == y2:
                 for x in range(min(x1, x2), max(x1, x2) + 1):
-                    canvas[y1][x] = "─"
+                    canvas[y1][x] = Text("─", style="dim")
 
             elif x1 == x2:
                 for y in range(min(y1, y2), max(y1, y2) + 1):
-                    canvas[y][x1] = "|"
+                    canvas[y][x1] = Text("|", style="dim")
+
+        # ZONES
 
         for zone in zones:
             x = scale_x(zone.coordinates[0])
             y = scale_y(zone.coordinates[1])
 
-            if 0 <= x < width and 0 <= y < height:
-                canvas[y][x] = "●"
+            if not (0 <= x < width and 0 <= y < height):
+                continue
+
+            if zone == self.engine.graph.start_hub:
+                symbol = "S"
+                style = zone.color or "white"
+            elif zone == self.engine.graph.end_hub:
+                symbol = "E"
+                style = zone.color or "white"
+            elif zone.cost == 2:
+                symbol = "R"
+                style = zone.color or "white"
+            elif zone.cost == 1:
+                symbol = "P"
+                style = zone.color or "white"
+            elif zone.cost == sys.maxsize:
+                symbol = "B"
+                style = zone.color or "white"
+            else:
+                symbol = "U"
+                style = zone.color or "white"
+
+            canvas[y][x] = Text(symbol, style=style)
+
+            # Zone name next to zone
+            name = zone.name[:10]
+
+            name_x = x + 2
+
+            if name_x + len(name) < width:
+                for i, char in enumerate(name):
+                    canvas[y][name_x + i] = Text(
+                        char,
+                        style="bold white"
+                    )
+        # DRONES
 
         for drone in self.engine.drones_stat:
-            x = scale_x(drone.current_zone.coordinates[0])
-            y = scale_y(drone.current_zone.coordinates[1])
+
+            if (
+                drone.current_zone == self.engine.graph.end_hub
+                and drone.visual_destination is None
+            ):
+                continue
+
+            # Drone in connection for restricted zone
+
+            if (
+                drone.current_connection is not None
+                and drone.destination is not None
+            ):
+                start = drone.current_zone
+                destination = drone.destination
+
+                start_x = scale_x(start.coordinates[0])
+                start_y = scale_y(start.coordinates[1])
+
+                end_x = scale_x(destination.coordinates[0])
+                end_y = scale_y(destination.coordinates[1])
+
+                x = int(
+                    start_x + (end_x - start_x) * progress
+                )
+
+                y = int(
+                    start_y + (end_y - start_y) * progress
+                )
+
+            # Normal movement
+            elif (
+                drone.previous_zone is not None
+                and drone.visual_destination is not None
+            ):
+
+                previous = drone.previous_zone
+                current = drone.visual_destination
+
+                start_x = scale_x(previous.coordinates[0])
+                start_y = scale_y(previous.coordinates[1])
+
+                end_x = scale_x(current.coordinates[0])
+                end_y = scale_y(current.coordinates[1])
+
+                x = int(
+                    start_x + (end_x - start_x) * progress
+                )
+
+                y = int(
+                    start_y + (end_y - start_y) * progress
+                )
+
+            else:
+                x = scale_x(drone.current_zone.coordinates[0])
+                y = scale_y(drone.current_zone.coordinates[1])
 
             if 0 <= x < width and 0 <= y < height:
-                canvas[y][x] = "◆"
+
+                color = self.drone_colors[
+                    (drone.id - 1) % len(self.drone_colors)
+                ]
+
+                canvas[y][x] = Text(
+                    f"D{drone.id}",
+                    style=f"bold {color}"
+                )
+
+        # Convert canvas to rich text
+
+        lines = []
+
+        for row in canvas:
+            line = Text()
+
+            for cell in row:
+                line.append(cell)
+
+            lines.append(line)
 
         return Panel(
-            "\n".join("".join(row) for row in canvas),
+            Text("\n").join(lines),
             title="Airspace Map",
         )
 
-# def make_map(self) -> Panel:
-#     zones = self.engine.graph.zones
+    def animate_map(self) -> None:
+        frames = 6
 
-#     max_x = max(zone.coordinates[0] for zone in zones)
-#     max_y = max(zone.coordinates[1] for zone in zones)
+        for frame in range(1, frames + 1):
+            progress = frame / frames
 
-#     width = max_x + 1
-#     height = max_y + 1
+            self.layout["map"].update(
+                self.make_map(progress)
+            )
 
-#     canvas = [
-#         [" " for _ in range(width)]
-#         for _ in range(height)
-#     ]
+            time.sleep(0.08)
 
-#     for zone in zones:
-#         x, y = zone.coordinates
-#         canvas[y][x] = "●"
+        for drone in self.engine.drones_stat:
+            drone.previous_zone = None
+            drone.visual_destination = None
 
-#     return Panel(
-#         "\n".join("".join(row) for row in canvas),
-#         title="Airspace Map",
-#     )
     def update(self) -> None:
         self.layout["header"].update(self.make_header())
         self.layout["summary"].update(self.make_summary())
         self.layout["drones"].update(self.make_drones_table())
-        self.layout["map"].update(self.make_map())
+        self.layout["map"].update(self.make_map(0.0))
         self.layout["events"].update(self.make_event_log())
         self.layout["footer"].update(self.make_footer())
 
-    # with Live(console=console, refresh_per_second=10, screen=True) as live:
-    #     while True:
-    #         live.update()
-    #         time.sleep(1)
+        self.animate_map()
