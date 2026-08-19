@@ -8,17 +8,17 @@
 # from visuals.airspace_map import AirspaceMap
 
 
-# # --------------------------------------------------------------------------#
-# # Event Log
-# # --------------------------------------------------------------------------#
+# # ########### #
+# #  EVENT LOG  #
+# # ########### #
 
 # class EventLog(Static):
-#     """Display the simulation event log."""
+#     # Display the simulation event log
 
 #     DEFAULT_CSS = """
-#     EventLog {
-#         width: 100%;
-#         height: 100%;
+#     EvantLog {
+#         width: 100;
+#         height: 100;
 #         padding: 1;
 #         overflow-y: auto;
 #     }
@@ -34,9 +34,9 @@
 #         self.engine = engine
 
 #     def update_log(self) -> None:
-#         """Update the displayed events."""
+#         # update the displayed events.
 
-#         events = self.engine.event_log[-10:]
+#         events = self.engine.engine_log[-10:]
 
 #         if not events:
 #             self.update("No events yet.")
@@ -50,12 +50,12 @@
 #         )
 
 
-# # ------------------------------------------------------------------------- #
-# # Summary
-# # ------------------------------------------------------------------------- #
+# # ########### #
+# #   SUMMARY   #
+# # ########### #
 
 # class Summary(Static):
-#     """Display simulation statistics."""
+#     # Display simulattion statistics.
 
 #     DEFAULT_CSS = """
 #     Summary {
@@ -76,11 +76,8 @@
 #         self.engine = engine
 
 #     def update_summary(self) -> None:
-#         """Update simulation statistics."""
-
-#         total_drones = (
-#             self.engine.graph.total_drones
-#         )
+#         # update simulation staticstics.abs
+#         total_drones = self.engine.graph.total_drones
 
 #         drones_in_connections = sum(
 #             len(drones)
@@ -90,7 +87,6 @@
 #         drones_in_transit = 0
 
 #         for zone in self.engine.zone_stat:
-
 #             if zone not in (
 #                 self.engine.graph.start_hub,
 #                 self.engine.graph.end_hub,
@@ -100,31 +96,27 @@
 #                 )
 
 #         completed_drones = (
-#             self.engine.zone_occupancy.get(
-#                 self.engine.graph.end_hub,
-#                 0,
-#             )
+#             self.engine.zone_occupancy.get(self.engine.graph.end_hub, 0)
 #         )
 
 #         self.update(
-#             f"Total Drones\n"
-#             f"  {total_drones}\n\n"
-#             f"Drones In Connections\n"
-#             f"  {drones_in_connections}\n\n"
-#             f"Drones In Transit\n"
-#             f"  {drones_in_transit}\n\n"
-#             f"Completed Drones\n"
-#             f"  {completed_drones}\n\n"
-#             f"Total Turns\n"
-#             f"  {self.engine.ticks}\n\n"
-#             f"Total path_cost\n"
-#             f"  {self.engine.total_path_cost}"
+#             f"Total Drones: {total_drones}\n"
+#             f"Drones in Connection: {drones_in_connections}"
+#             f"Drones in Transit: {drones_in_transit}"
+#             f"Completed Drones: {completed_drones}"
+#             f"Total path cost: {self.engine.total_path_cost}"
+#             f"Total turns: {self.engine.ticks}"
 #         )
 
+# # ############# #
+# #  DRONE TABLE  #
+# # ############# #
 
-# # ------------------------------------------------------------------------- #
-# # Drone Table
-# # ------------------------------------------------------------------------- #
+# # class DroneTable(DataTable):
+# #     # Display the current state of all drones.
+
+# # 00000000000000000000000000000000000000000000000000000000000000000000
+
 
 # class DroneTable(DataTable):
 #     """Display the current state of all drones."""
@@ -245,7 +237,7 @@
 #         width: 100%;
 #         height: 2fr;
 #         layout: horizontal;
-#     }
+#      }
 
 #     /* ------------------------------------------------------------------ */
 #     /* Airspace map                                                       */
