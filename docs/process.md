@@ -157,6 +157,11 @@ Total drones: 25
   - Today i would like to finish map rendering and footer function implementation.
   - asked chatgpt for refernce to learn proper rendering. Official resources are very short. So I learned how to use rich from chatgpt.
 
+  # DAy 14[Aug 19]
+  - man the map looks ugly and 67 turns for challenger? Need better optimization
+  - blunder!!! Why on earth didnt i work with textual instead of the cursed RICH. I will never follow Rich blindly. Turning entire rich dash board into textual format. 
+  - reformat visual_generator.py
+
 
 
 # #############################ERROR
