@@ -1,4 +1,4 @@
-UV := uv
+UV := $(shell command -v uv 2>/dev/null || echo "$(HOME)/.local/bin/uv")
 MAIN := main.py
 VENV := .venv
 MAP ?= maps/medium/02_circular_loop.txt
@@ -7,6 +7,14 @@ PYTHON := python
 .PHONY: install activate run debug clean fclean lint lint-strict
 
 install:
+	@if [ ! -x "$(UV)" ]; then \
+		echo "uv not found. Installing uv..."; \
+		curl -LsSf https://astral.sh/uv/install.sh | sh; \
+	fi
+	@if [ ! -x "$(UV)" ]; then \
+		echo "Error: uv installation failed."; \
+		exit 1; \
+	fi
 	$(UV) sync
 	@echo "Virtual environment ready: $(VENV)"
 
