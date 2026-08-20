@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
+from pathlib import Path
+from parser.map_parser import Parser
 from textual.app import App, ComposeResult
 from textual.containers import Container, Horizontal
 from textual.widgets import DataTable, Footer, Header, Static
+from textual.widgets import Select
+from textual.screen import ModalScreen
 
 from core.engine import Engine
 from visuals.airspace_map import AirspaceMap
@@ -37,7 +41,7 @@ class EventLog(Static):
     def update_log(self) -> None:
         # update the displayed events.
 
-        events = self.engine.event_log[-10:]
+        events = self.engine.event_log
 
         if not events:
             self.update("No events yet.")
@@ -175,10 +179,13 @@ class DroneTable(DataTable):
                 status = "IN_TRANSIT"
 
             # WAITING
-            if drone in self.engine.waiting:
-                waiting = "YES"
+            if drone.current_zone == self.engine.graph.end_hub:
+                waiting = "--"
             else:
-                waiting = "NO"
+                if drone in self.engine.waiting:
+                    waiting = "YES"
+                else:
+                    waiting = "NO"
 
             self.add_row(
                 str(drone.id),
@@ -189,6 +196,79 @@ class DroneTable(DataTable):
             )
 
 
+# ############## #
+#  MAP SELECTOR  #
+# ############## #
+
+class MapSelector(ModalScreen[str | None]):
+    # Secondary screen for selecting a map
+
+    DEFAULT_CSS = """
+
+    MapSelector {
+        align: center middle;
+    }
+
+    #map-dialog {
+        width: 70;
+        height: auto;
+        max-height: 80%;
+        padding: 2;
+        border: round cyan;
+        background: $surface;
+    }
+
+    #map-title {
+        width: 100%;
+        content-align: center middle;
+        margin-bottom: 1;
+        text-style: bold;
+    }
+
+    #map-select {
+        width: 100%
+    }
+    """
+
+    def __init__(
+        self,
+        options: list[tuple[str, str]],
+    ) -> None:
+        super().__init__()
+
+        self.options = options
+
+    def compose(self) -> ComposeResult:
+        with Container(id="map-dialog"):
+            yield Static(
+                "Select Map",
+                id="map-title",
+            )
+
+            yield Select(
+                self.options,
+                prompt="Choose a map...",
+                id="map-select",
+            )
+
+    def on_select_changed(
+        self,
+        event: Select.Changed,
+    ) -> None:
+        # Return the selected map
+
+        if event.value is Select.BLANK:
+            return
+
+        self.dismiss(str(event.value))
+
+    # def on_key(self, event) -> None:
+    #     # Allow escape to cancel
+
+    #     if event.key == "escape":
+    #         self.dismiss(None)
+
+
 # ############# #
 #   DASHBOARD   #
 # ############# #
@@ -197,6 +277,19 @@ class Dashboard(App):
 
     # Main Textual application.
     TITLE = "FlyIn - Drone Traffic Simulation"
+
+    BINDINGS = [
+        ("q", "quit", "Quit"),
+        ("Q", "quit", "Quit"),
+        ("p", "toggle_pause", "Pause / Resume"),
+        ("P", "toggle_pause", "Pause / Resume"),
+        ("s", "step", "Step"),
+        ("S", "step", "Step"),
+        ("m", "change_map", "Change Map"),
+        ("M", "change_map", "Change Map"),
+        ("r", "restart", "Restart"),
+        ("R", "restart", "Restart"),
+    ]
 
     CSS = """
     Screen {
@@ -260,6 +353,7 @@ class Dashboard(App):
     ) -> None:
         super().__init__()
 
+        self.paused = False
         self.engine = engine
 
     # LAYOUT
@@ -311,11 +405,97 @@ class Dashboard(App):
 
     # SIMULATION
     def run_simulation(self) -> None:
+        if self.paused:
+            return
         # Run one simulation tick.
         if self.engine.is_finished():
-            self.exit()
             return
+
         self.engine.simulation()
+        self.update_dashboard()
+
+    # PAUSE ACTION
+    def action_toggle_pause(self) -> None:
+        self.paused = not self.paused
+
+    # STEP ACTION
+    def action_step(self) -> None:
+        if self.engine.is_finished():
+            return
+
+        self.engine.simulation()
+        self.update_dashboard()
+
+    # MAP SELECTION OPTION
+    def action_change_map(self) -> None:
+        # Open the map selection screen.abs
+
+        try:
+            maps = sorted(
+                Path("maps").rglob("*.txt")
+            )
+        except Exception:
+            raise ValueError("Map files in .txt formats are misiing")
+
+        options = [
+            (
+                str(path),
+                str(path),
+            )
+            for path in maps
+        ]
+
+        self.push_screen(
+            MapSelector(options),
+            self.map_selected,
+        )
+
+    # RESET
+    def action_restart(self) -> None:
+        self.engine.reset()
+
+    def map_selected(self, map_path: str | None) -> None:
+        # Load the selected map and restart simulation
+
+        if map_path is None:
+            return
+
+        parsed = Parser(map_path)
+        graph_object = parsed.parser()
+
+        self.engine = Engine(graph_object)
+
+        # AIRSPACE MAP
+        airspace_map = self.query_one(
+            "#map",
+            AirspaceMap,
+        )
+
+        # EVENT LOG
+        event_log = self.query_one(
+            "#events",
+            EventLog,
+        )
+
+        # DRONE TABLE
+        drone_table = self.query_one(
+            "#drones",
+            DroneTable,
+        )
+
+        # SUMMARY
+        summary = self.query_one(
+            "#summary",
+            Summary,
+        )
+
+        airspace_map.engine = self.engine
+        event_log.engine = self.engine
+        drone_table.engine = self.engine
+        summary.engine = self.engine
+
+        self.paused = False
+
         self.update_dashboard()
 
     # UPDATE DASHBOARD

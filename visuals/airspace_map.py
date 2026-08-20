@@ -246,56 +246,35 @@ class AirspaceMap(Widget):
         height = len(canvas)
 
         for drone in self.engine.drones_stat:
+
             # COMPLETED DRONES DISAPPEAR FROM THE MAP
             if (
                 drone.current_zone
                 == self.engine.graph.end_hub
-                and drone.visual_destination is None
+                # and drone.visual_destination is None
             ):
-                continue
+                if drone.current_zone in positions:
+                    position = positions[drone.current_zone]
+                else:
+                    continue
 
-            # DETERMINE DRONE POSITION:
+            else:
+                # DETERMINE DRONE POSITION:
 
-            position = None
+                position = None
 
-            # Drone travelling through connection
-            if (
-                drone.current_connection is not None
-                and drone.destination is not None
-            ):
-                start = drone.current_zone
-                destination = drone.destination
-
-                if start in positions and destination in positions:
-                    start_x, start_y = positions[start]
-                    end_x, end_y = positions[destination]
-
-                    progress = getattr(
-                        drone,
-                        "visual_progress",
-                        0.0,
-                    )
-
-                    x = int(start_x + (end_x - start_x) * progress)
-                    y = int(start_y + (end_y - start_y) * progress)
-                    position = (x, y)
-
-            # Normal visual movement
-            if position is None:
+                # Drone travelling through connection
                 if (
-                    drone.visual_destination is not None
-                    and drone.previous_zone is not None
+                    position is None
+                    and drone.current_connection is not None
+                    and drone.destination is not None
                 ):
+                    start = drone.current_zone
+                    destination = drone.destination
 
-                    previous = drone.previous_zone
-                    current = drone.visual_destination
-
-                    if (
-                        previous in positions
-                        and current in positions
-                    ):
-                        start_x, start_y = positions[previous]
-                        end_x, end_y = positions[current]
+                    if start in positions and destination in positions:
+                        start_x, start_y = positions[start]
+                        end_x, end_y = positions[destination]
 
                         progress = getattr(
                             drone,
@@ -305,36 +284,63 @@ class AirspaceMap(Widget):
 
                         x = int(start_x + (end_x - start_x) * progress)
                         y = int(start_y + (end_y - start_y) * progress)
-
                         position = (x, y)
 
-                # Drone sitting in a zone
+                # Normal visual movement
                 if position is None:
+                    if (
+                        drone.visual_destination is not None
+                        and drone.previous_zone is not None
+                    ):
 
-                    if drone.current_zone not in positions:
-                        continue
+                        previous = drone.previous_zone
+                        current = drone.visual_destination
 
-                    position = positions[drone.current_zone]
-            x, y = position
+                        if (
+                            previous in positions
+                            and current in positions
+                        ):
+                            start_x, start_y = positions[previous]
+                            end_x, end_y = positions[current]
 
-            if not (0 <= x < width and 0 <= y < height):
-                continue
+                            progress = getattr(
+                                drone,
+                                "visual_progress",
+                                0.0,
+                            )
 
-            color = self.DRONE_COLORS[
-                (drone.id - 1) % len(self.DRONE_COLORS)
-            ]
-            label = f"D{drone.id}"
+                            x = int(start_x + (end_x - start_x) * progress)
+                            y = int(start_y + (end_y - start_y) * progress)
 
-            # DRAW DRONE ID
-            for index, chars in enumerate(label):
+                            position = (x, y)
 
-                target_x = x + index
-                if 0 <= target_x < width and 0 <= y < height:
+                    # Drone sitting in a zone
+                    if position is None:
 
-                    canvas[y][target_x] = Text(
-                        chars,
-                        style=f"bold {color}"
-                    )
+                        if drone.current_zone not in positions:
+                            continue
+
+                        position = positions[drone.current_zone]
+                x, y = position
+
+                if not (0 <= x < width and 0 <= y < height):
+                    continue
+
+                color = self.DRONE_COLORS[
+                    (drone.id - 1) % len(self.DRONE_COLORS)
+                ]
+                label = f"D{drone.id}"
+
+                # DRAW DRONE ID
+                for index, chars in enumerate(label):
+
+                    target_x = x + index
+                    if 0 <= target_x < width and 0 <= y < height:
+
+                        canvas[y][target_x] = Text(
+                            chars,
+                            style=f"bold {color}"
+                        )
 
     # ############ #
     #    RENDER    #

@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/18 21:46:58 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/20 21:15:17 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -162,7 +162,14 @@ class Engine:
 
             # cost 1: direct transit
             if expense == 1:
-                drone.current_zone = self.request[drone]
+                destination = self.request[drone]
+
+                drone.current_zone = destination
+
+                drone.previous_zone = destination
+                drone.visual_destination = None
+                drone.visual_progress = 0.0
+
                 self.zone_stat[drone.current_zone].append(drone)
                 self.drones_stat[drone].popleft()
 
@@ -237,6 +244,9 @@ class Engine:
                 break
 
             time.sleep(1)
+
+    def reset(self) -> None:
+        self.__init__(self.graph)
 
     def abs_distance(self, x: int, y: int) -> float:
         return (

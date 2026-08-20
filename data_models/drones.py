@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:33:02 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/18 17:40:34 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/20 21:02:31 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -34,6 +34,7 @@ class Drone:
         # visualization
         self.previous_zone: Zone | None = None
         self.visual_destination: Zone | None = None
+        self.visual_progress: float = 0.0
 
     def start_transit(
         self, connection: Connection,
@@ -46,18 +47,16 @@ class Drone:
     def update_transit(self) -> None:
         self.turns_remaining -= 1
 
-        if self.turns_remaining == 0:
+        if self.turns_remaining <= 0:
             if self.destination is not None:
                 self.current_zone = self.destination
 
+                # Visual map is now complete
+                self.previous_zone = self.current_zone
+                self.visual_destination = None
+                self.visual_progress = 0.0
+
             self.current_connection = None
             self.destination = None
+            self.turns_remaining = 0
 
-    # def __str__(self) -> str:
-    #     return (
-    #         f"Graph: {nb_zones} zones"
-    #         f" and {nb_connections} connections\n\n"
-    #         f"Start zone: {self.start_hub}\n"
-    #         f"end zone: {self.end_hub}\n"
-    #         f"Total drones: {self.total_drones}\n"
-    #     )
