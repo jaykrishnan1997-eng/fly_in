@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/21 14:45:23 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/21 15:21:17 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -149,8 +149,27 @@ class Engine:
 
                     if connection is not None:
                         self.connection_stat[connection].remove(drone)
+
                     if destination is not None:
                         movements[drone] = destination.name
+
+                    if len(self.drones_stat[drone]) > 1:
+                        next_zone = self.drones_stat[drone][1]
+
+                        # continue to next zone if it is a normal move
+                        if next_zone.cost == 1:
+                            self.zone_stat[drone.current_zone].remove(drone)
+
+                            drone.previous_zone = drone.current_zone
+                            drone.current_zone = next_zone
+                            drone.visual_destination = None
+                            drone.visual_progress = 0.0
+
+                            self.zone_stat[
+                                drone.current_zone].append(drone)
+                            self.drones_stat[drone].popleft()
+
+                            movements[drone] = next_zone.name
 
         for drone in self.request.keys():
             expense = self.drones_stat[drone][1].cost
