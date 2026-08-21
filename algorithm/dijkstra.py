@@ -22,10 +22,13 @@ from typing import Deque
 
 
 def neighbor(
-    current_zone: Zone, blocked: list[Zone], connection: list[Connection]
+    current_zone: Zone, blocked: list[Zone], connection: list[Connection],
+    excluded_connection: Connection | None = None
 ) -> list[Zone]:
     neighbor: list[Zone] = []
     for line in connection:
+        if line == excluded_connection:
+            continue
         if (
             current_zone == line.zone_a
             and line.zone_b not in blocked
@@ -40,7 +43,8 @@ def neighbor(
 
 
 def dijkstra(
-    drone: Drone, blocked: list[Zone], graph: Graph
+    drone: Drone, blocked: list[Zone], graph: Graph,
+    excluded_connection: Connection | None = None
 ) -> list[Zone]:
     # must include restricted zone when the zone
     # is fully occupied in current, next and next-next move.
@@ -62,7 +66,7 @@ def dijkstra(
         current_zone = heapq.heappop(heap)[2]
         if current_zone not in visited:
             neighbors: list[Zone] = neighbor(
-                current_zone, blocked, graph.connections)
+                current_zone, blocked, graph.connections, excluded_connection)
             for zone in neighbors:
                 total_cost = cost_stat[current_zone][0] + zone.cost
                 if total_cost < cost_stat[zone][0]:

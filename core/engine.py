@@ -92,6 +92,30 @@ class Engine:
             connection = self.graph.get_connection(current_zone, next_zone)
 
             if (
+                next_zone in self.request.values()
+                or
+                (
+                    connection is not None
+                    and self.connection_capacity[connection]
+                    >= connection.max_link_capacity
+                )
+            ):
+                alternative = dijkstra(
+                    drone,
+                    list(set(self.blocked) | set(drone.came_from)),
+                    self.graph,
+                    connection
+                )
+
+                if len(alternative) > 1:
+                    self.drones_stat[drone] = deque(alternative)
+                    next_zone = alternative[1]
+                    connection = self.graph.get_connection(
+                        current_zone,
+                        next_zone
+                    )
+
+            if (
                 ((
                     self.zone_occupancy[next_zone]
                     - self.zone_outgoing[next_zone])
