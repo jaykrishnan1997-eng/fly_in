@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   engine.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/20 21:15:17 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/21 14:45:23 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -135,6 +135,7 @@ class Engine:
         movements = {}
         for drone in self.drones_stat.keys():
             if drone.current_connection is not None:
+                destination = drone.destination
                 drone.update_transit()
 
                 if drone.current_connection is None:
@@ -148,6 +149,8 @@ class Engine:
 
                     if connection is not None:
                         self.connection_stat[connection].remove(drone)
+                    if destination is not None:
+                        movements[drone] = destination.name
 
         for drone in self.request.keys():
             expense = self.drones_stat[drone][1].cost
@@ -156,6 +159,7 @@ class Engine:
 
             drone.previous_zone = drone.current_zone
             drone.visual_destination = self.request[drone]
+            drone.visual_progress = 0.0
 
             self.zone_stat[drone.current_zone].remove(drone)
             drone.came_from.append(drone.current_zone)
@@ -194,6 +198,11 @@ class Engine:
             if drone not in self.request:
                 self.waiting.append(drone)
 
+        # update zone occupancy after all movements
+        self.zone_occupancy = {
+            zone: len(self.zone_stat[zone])
+            for zone in self.graph.zones
+        }
         return movements
 
     def print_turn(self, movements: dict[Drone, str]) -> None:
@@ -211,7 +220,7 @@ class Engine:
         )
 
     def simulation(self) -> None:
-        self.ticks += 1
+
         for drone in self.drones_stat.keys():
             if drone.current_connection is None:
                 union = list(set(self.blocked) | set(drone.came_from))
@@ -223,12 +232,14 @@ class Engine:
 
         movements = self.move()
 
-        self.event_log.append(
-            " ".join(
-                f"D{drone.id}-{destination}"
-                for drone, destination in movements.items()
+        if movements:
+            self.ticks += 1
+            self.event_log.append(
+                " ".join(
+                    f"D{drone.id}-{destination}"
+                    for drone, destination in movements.items()
+                )
             )
-        )
 
         self.print_turn(movements)
 

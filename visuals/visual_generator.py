@@ -3,7 +3,7 @@
 from pathlib import Path
 from parser.map_parser import Parser
 from textual.app import App, ComposeResult
-from textual.containers import Container, Horizontal
+from textual.containers import Container, Horizontal, VerticalScroll
 from textual.widgets import DataTable, Footer, Header, Static
 from textual.widgets import Select
 from textual.screen import ModalScreen
@@ -16,12 +16,12 @@ from visuals.airspace_map import AirspaceMap
 #  EVENT LOG  #
 # ########### #
 
-class EventLog(Static):
+class EventLog(VerticalScroll):
     # Display the simulation event log
     TITLE = "EVENT LOG"
 
     DEFAULT_CSS = """
-    EvantLog {
+    EventLog {
         width: 100;
         height: 100;
         padding: 1;
@@ -40,17 +40,17 @@ class EventLog(Static):
 
     def update_log(self) -> None:
         # update the displayed events.
-
         events = self.engine.event_log
 
+        self.remove_children()
+
         if not events:
-            self.update("No events yet.")
+            self.mount(Static("No events yet."))
             return
 
-        self.update(
-            "\n".join(
-                str(event)
-                for event in events
+        self.mount(
+            Static(
+                "\n".join(str(event)for event in events)
             )
         )
 

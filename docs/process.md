@@ -169,8 +169,18 @@ Total drones: 25
   - Fixed the color issue by a Textual color package.
   - The bigger map looked ugly with all the names. so I am adding a mouse hovering option from Textual that displays stat on a drone when hovered above the zone. 
   - check capacity info seems not working.
-  
+  - what i want : 
 
+    D1-start-loop_a
+    D1-loop_a-loop_b D2-start-loop_a
+    D1-exit_point D2-loop_a-loop_b D3-start-loop_a
+    D1-goal D2-exit_point D3-loop_a-loop_b D4-start-loop_a
+    D2-goal D3-exit_point D4-loop_a-loop_b D5-start-loop_a
+    D3-goal D4-exit_point D5-loop_a-loop_b D6-start-loop_a
+    D4-goal D5-exit_point D6-loop_a-loop_b
+    D5-goal D6-exit_point
+    D6-goal
+  
 
 # #############################ERROR
  # status:  Resolved / traced correct:
