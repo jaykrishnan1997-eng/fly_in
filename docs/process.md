@@ -162,6 +162,14 @@ Total drones: 25
   - blunder!!! Why on earth didnt i work with textual instead of the cursed RICH. I will never follow Rich blindly. Turning entire rich dash board into textual format. 
   - reformat visual_generator.py
 
+  # Day 15[Aug 20]
+  - Fixed the map with all testual, but had problem from color rendering for the text file. Since textual had a serious problem with color
+
+  # Day 16[Aug 21]
+  - Fixed the color issue by a Textual color package.
+  - The bigger map looked ugly with all the names. so I am adding a mouse hovering option from Textual that displays stat on a drone when hovered above the zone. 
+  - check capacity info seems not working.
+  
 
 
 # #############################ERROR

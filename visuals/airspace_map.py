@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 
 import sys
+import random
 from rich.text import Text
 from textual.widget import Widget
+# from textual.widgets import Static
+from textual.color import Color
+from textual.events import MouseMove
 from core.engine import Engine
+
 
 # ┌──────────────────────────────────────────────────────────────┐
 # │ HEADER                                                       │
@@ -56,15 +61,38 @@ class AirspaceMap(Widget):
 
         self.engine = engine
 
+        # Screen position of zone
+        self.zone_positions: dict[tuple[int, int], object] = {}
+
+        # Currently hovered zone
+        self.hovered_zone = None
+
+        self.mouse_x = 0
+        self.mouse_y = 0
+
+        # self.tooltip = HoverTooltip("")
+        # self.tooltip.display = False
+
     # ########### #
     # COLOR GUARD #
     # ########### #
 
     def rich_color(self, color: str | None) -> str:
         # Convert map color orange to format that Textual accept
-        if color == "orange":
-            return "#FFA500"
-        return color or "while"
+        if color == "rainbow":
+            color = random.choice([
+                "violet", "indigo",
+                "blue", "green",
+                "yellow", "orange",
+                "red"])
+
+        if color is None:
+            return "white"
+
+        try:
+            return Color.parse(color).hex
+        except ValueError:
+            return "white"
 
     # ######### #
     #  SCALING  #
@@ -218,20 +246,21 @@ class AirspaceMap(Widget):
             style=style,
         )
 
-        # ADDING ZONE NAME
-        name = str(zone.name)
+        # # ADDING ZONE NAME
+        # name = str(zone.name)
 
-        name_x = x + 2
+        # name_x = x + 2
 
-        for index, chars in enumerate(name):
+        # for index, chars in enumerate(name):
 
-            target_x = name_x + index
-            if 0 <= target_x < width and 0 <= y < height:
+        #     target_x = name_x + index
+        #     if 0 <= target_x < width and 0 <= y < height:
 
-                canvas[y][target_x] = Text(
-                    chars,
-                    style="bold white"
-                )
+        #         canvas[y][target_x] = Text(
+        #             chars,
+        #             style="bold white"
+        #         )
+
     # ############# #
     #  DRAW DRONES  #
     # ############# #
@@ -386,7 +415,8 @@ class AirspaceMap(Widget):
 
         for zone in zones:
             x, y = zone.coordinates
-            positions[zone] = self.scale_coordinates(
+
+            screen_positions = self.scale_coordinates(
                 x,
                 y,
                 min_x,
@@ -397,6 +427,13 @@ class AirspaceMap(Widget):
                 height,
             )
 
+            positions[zone] = screen_positions
+
+        # Zone position for mouse interaction
+        self.zone_positions = {
+            position: zone
+            for zone, position in positions.items()
+        }
         # FIRST Draw connections
 
         for connection in self.engine.graph.connections:
@@ -439,7 +476,71 @@ class AirspaceMap(Widget):
             positions,
         )
 
-        # Convert canvas to rich text
+        # DRAW HOVER POPUP
+
+        if self.hovered_zone is not None:
+            zone = self.hovered_zone
+
+            popup_lines = [
+                f"{zone.name}",
+                f"Cost: {zone.cost}",
+                (
+                    f"Capacity: {self.engine.zone_occupancy[zone]}"
+                    f"/{zone.max_drones}"
+                ),
+                f"Coordinates: {zone.coordinates}",
+            ]
+
+            popup_width = max(len(line) for line in popup_lines) + 2
+            popup_height = len(popup_lines) + 2
+
+            # keep popup within the map
+            popup_x = self.mouse_x + 2
+            popup_y = self.mouse_y + 1
+
+            if popup_x + popup_width >= width:
+                popup_x = max(0, self.mouse_x - popup_width - 1)
+
+            if popup_y + popup_height >= height:
+                popup_y = max(0, self.mouse_y - popup_height - 1)
+
+            # Top border
+            if 0 <= popup_y < height:
+                for px in range(popup_width):
+                    if 0 <= popup_x + px < width:
+                        canvas[popup_y][popup_x + px] = Text("─")
+
+            # Content
+            for row_index, line in enumerate(popup_lines, start=1):
+                py = popup_y + row_index
+
+                if not (0 <= py < height):
+                    continue
+
+                for px in range(popup_width):
+                    target_x = popup_x + px
+
+                    if not (0 <= target_x < width):
+                        continue
+                    if px == 0 or px == popup_width - 1:
+                        canvas[py][target_x] = Text("|")
+                    else:
+                        char_index = px - 1
+
+                        if char_index < len(line):
+                            canvas[py][target_x] = Text(
+                                line[char_index],
+                                style="bold white",
+                            )
+                        else:
+                            canvas[py][target_x] = Text(" ")
+            # Bottom border
+            bottom_y = popup_y + popup_height - 1
+
+            if 0 <= bottom_y < height:
+                for px in range(popup_width):
+                    if 0 <= popup_x + px < width:
+                        canvas[bottom_y][popup_x + px] = Text("─")
 
         result = Text()
 
@@ -447,7 +548,35 @@ class AirspaceMap(Widget):
             for cell in row:
                 result.append(cell)
             result.append("\n")
+
         return result
+
+    # ########### #
+    # Mouse Event #
+    # ########### #
+
+    def on_mouse_move(self, event: MouseMove) -> None:
+        self.mouse_x = event.offset.x
+        self.mouse_y = event.offset.y
+
+        hover_radius = 2
+        nearest_zone = None
+        nearest_distance = float("inf")
+
+        for (zone_x, zone_y), zone in self.zone_positions.items():
+            dx = self.mouse_x - zone_x
+            dy = self.mouse_y - zone_y
+
+            dist = (dx)**2 + (dy)**2
+
+            if dist <= hover_radius**2:
+                if dist < nearest_distance:
+                    nearest_distance = dist
+                    nearest_zone = zone
+
+        self.hovered_zone = nearest_zone
+
+        self.refresh()
 
     # ####### #
     # Refresh #
