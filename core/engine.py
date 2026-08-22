@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/21 16:22:40 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/22 10:18:54 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -175,7 +175,7 @@ class Engine:
                         self.connection_stat[connection].remove(drone)
 
                     if destination is not None:
-                        movements[drone] = destination.name
+                        movements[drone] = drone.current_zone.name
 
                     if len(self.drones_stat[drone]) > 1:
                         next_zone = self.drones_stat[drone][1]
@@ -193,7 +193,8 @@ class Engine:
                                 drone.current_zone].append(drone)
                             self.drones_stat[drone].popleft()
 
-                            movements[drone] = next_zone.name
+                            if drone not in movements:
+                                movements[drone] = next_zone.name
 
         for drone in self.request.keys():
             expense = self.drones_stat[drone][1].cost
@@ -283,8 +284,14 @@ class Engine:
                     for drone, destination in movements.items()
                 )
             )
+            self.save_event_log()
 
         self.print_turn(movements)
+
+    def save_event_log(self) -> None:
+        with open("event_log.txt", "w") as file:
+            for event in self.event_log:
+                file.write(event + "\n")
 
     def run(self) -> None:
         while True:
@@ -294,7 +301,7 @@ class Engine:
             if (
                 (len(self.zone_stat[self.graph.end_hub])
                  == len(self.drones_stat))):
-                # print("OK")
+                self.save_event_log()
                 break
 
             time.sleep(1)

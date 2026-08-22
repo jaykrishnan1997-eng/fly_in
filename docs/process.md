@@ -172,14 +172,21 @@ Total drones: 25
   - what i want : 
 
     D1-start-loop_a
-    D1-loop_a-loop_b D2-start-loop_a
-    D1-exit_point D2-loop_a-loop_b D3-start-loop_a
-    D1-goal D2-exit_point D3-loop_a-loop_b D4-start-loop_a
-    D2-goal D3-exit_point D4-loop_a-loop_b D5-start-loop_a
-    D3-goal D4-exit_point D5-loop_a-loop_b D6-start-loop_a
-    D4-goal D5-exit_point D6-loop_a-loop_b
-    D5-goal D6-exit_point
+    D1-loop_a D2-start-loop_a
+    D1-loop_a-loop_b D2-loop_a D3-start-loop_a
+    D1-loop_b D2-loop_a-loop_b D3-loop_a D4-start-loop_a
+    D1-goal D2-loop_b D3-loop_a-loop_b D4-loop_a D5-start-loop_a
+    D2-goal D3-loop_b D4-loop_a-loop_b D5-loop_a D6-start-loop_a
+    D3-goal D4-loop_b D5-loop_a-loop_b D6-loop_a
+    D4-goal D5-loop_b D6-loop_a-loop_b
+    D5-goal D6-loop_b
     D6-goal
+  - now drones can move simultaneously if path and zones allows.
+
+  # Day17[Aug 22]
+  - Yesterday night I went crazy. But i am fine now.
+
+
   
 
 # #############################ERROR
