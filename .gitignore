@@ -3,3 +3,4 @@ __pycache__
 .venv
 uv.lock
 event_log.txt
+debug.txt

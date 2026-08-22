@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/22 10:18:54 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/22 12:58:04 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -70,6 +70,11 @@ class Engine:
             connection: len(self.connection_stat[connection])
             for connection in self.graph.connections
         }
+
+        for connection, drones_in_transit in self.connection_stat.items():
+            for d in drones_in_transit:
+                if d.turns_remaining <= 1:
+                    self.connection_capacity[connection] -= 1
         # optimization, further one more priority
         drones = sorted(
             self.drones_stat.keys(),
@@ -91,6 +96,13 @@ class Engine:
             current_zone = drone.current_zone
             connection = self.graph.get_connection(current_zone, next_zone)
 
+            with open("debug.txt", "a") as file:
+                file.write(
+                    f"D{drone.id}: {current_zone.name} -> {next_zone.name}, "
+                    f"occupancy={self.zone_occupancy[next_zone]}, "
+                    f"outgoing={self.zone_outgoing[next_zone]}, "
+                    f"max={next_zone.max_drones}\n"
+                )
             if (
                 next_zone in self.request.values()
                 or
@@ -177,24 +189,24 @@ class Engine:
                     if destination is not None:
                         movements[drone] = drone.current_zone.name
 
-                    if len(self.drones_stat[drone]) > 1:
-                        next_zone = self.drones_stat[drone][1]
+                    # if len(self.drones_stat[drone]) > 1:
+                    #     next_zone = self.drones_stat[drone][1]
 
-                        # continue to next zone if it is a normal move
-                        if next_zone.cost == 1:
-                            self.zone_stat[drone.current_zone].remove(drone)
+                    #     # continue to next zone if it is a normal move
+                    #     if next_zone.cost == 1:
+                    #         self.zone_stat[drone.current_zone].remove(drone)
 
-                            drone.previous_zone = drone.current_zone
-                            drone.current_zone = next_zone
-                            drone.visual_destination = None
-                            drone.visual_progress = 0.0
+                    #         drone.previous_zone = drone.current_zone
+                    #         drone.current_zone = next_zone
+                    #         drone.visual_destination = None
+                    #         drone.visual_progress = 0.0
 
-                            self.zone_stat[
-                                drone.current_zone].append(drone)
-                            self.drones_stat[drone].popleft()
+                    #         self.zone_stat[
+                    #             drone.current_zone].append(drone)
+                    #         self.drones_stat[drone].popleft()
 
-                            if drone not in movements:
-                                movements[drone] = next_zone.name
+                    #         if drone not in movements:
+                    #             movements[drone] = next_zone.name
 
         for drone in self.request.keys():
             expense = self.drones_stat[drone][1].cost

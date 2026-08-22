@@ -181,6 +181,7 @@ Total drones: 25
     D4-goal D5-loop_b D6-loop_a-loop_b
     D5-goal D6-loop_b
     D6-goal
+  
   - now drones can move simultaneously if path and zones allows.
 
   # Day17[Aug 22]
