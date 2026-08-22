@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/21 15:21:17 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/21 16:22:40 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -200,9 +200,9 @@ class Engine:
 
             self.total_path_cost += expense
 
-            drone.previous_zone = drone.current_zone
-            drone.visual_destination = self.request[drone]
-            drone.visual_progress = 0.0
+            # drone.previous_zone = drone.current_zone
+            # drone.visual_destination = self.request[drone]
+            # drone.visual_progress = 0.0
 
             self.zone_stat[drone.current_zone].remove(drone)
             drone.came_from.append(drone.current_zone)
