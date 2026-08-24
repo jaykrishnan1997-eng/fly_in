@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   map_parser.py                                        :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:51:56 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/17 21:10:29 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/24 13:53:57 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -53,7 +53,15 @@ class Parser:
             if "nb_drones:" == token[0].lower():
                 if len(token) != 2:
                     raise ValueError("Invalid nb_drones line")
-                nb_drones = int(token[1])
+                try:
+                    nb_drones = int(token[1])
+                except ValueError:
+                    raise ValueError(f"Invalid nb_drones value on line {line}")
+                if nb_drones < 1:
+                    raise ValueError(
+                        f"nb_drones must be posititve integer, got {nb_drones}"
+                        f" on line: {line}"
+                    )
 
             if token[0].lower() in {"hub:", "start_hub:", "end_hub:"}:
 
@@ -74,12 +82,29 @@ class Parser:
                 for unit in metadata.split():
                     if "zone=" in unit:
                         unit_type = unit.split("=", 1)[1]
+                        valid_zones = [
+                            "normal", "blocked", "restricted", "priority"]
+                        if unit_type.lower() not in valid_zones:
+                            raise ValueError(
+                                f"Invlaid zone_type '{unit_type}' "
+                                f"on line: {line} - must be "
+                                f"one of {valid_zones}"
+                            )
                     elif "color=" in unit:
                         unit_color = unit.split("=", 1)[1]
                     elif "max_drones=" in unit:
-                        unit_max_drones = int(
-                            unit.split("=", 1)[1]
-                        )
+                        try:
+                            unit_max_drones = int(unit.split("=", 1)[1])
+                        except ValueError:
+                            raise ValueError(
+                                f"Invalid max_drones value on line: {line}"
+                            )
+                        if unit_max_drones < 1:
+                            raise ValueError(
+                                f"Invalid max_drones value '{unit_max_drones}'"
+                                f"on line: {line} - "
+                                "must be a positive integer"
+                            )
 
                 if token[0].lower() == "start_hub:":
                     start_hub = Zone(
@@ -146,9 +171,20 @@ class Parser:
 
                 for unit in metadata.split():
                     if "max_link_capacity=" in unit:
-                        max_link_capacity = int(
-                            unit.split("=", 1)[1]
-                        )
+                        try:
+                            max_link_capacity = int(unit.split("=", 1)[1])
+                        except ValueError:
+                            raise ValueError(
+                                "Invalid max_link_capacity"
+                                f"value on line: {line}"
+                            )
+                        if max_link_capacity < 1:
+                            raise ValueError(
+                                "Invalid max_link_capacity "
+                                f"value '{max_link_capacity}' "
+                                f"on line: {line} - must be a "
+                                "positive integer"
+                            )
                 new_connection = Connection(
                     zone_a, zone_b,
                     max_link_capacity

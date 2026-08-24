@@ -1,0 +1,10 @@
+nb_drones: 5
+
+start_hub: h0 0 0 [max_drones=5]
+hub: h1 1 0 [zone=restricted max_drones=2]
+hub: h2 0 1 [zone=restricted max_drones=1]
+end_hub: h3 2 0
+
+connection: h0-h1 [max_link_capacity=2]
+connection: h1-h3 [max_link_capacity=1]
+connection: h0-h2 [max_link_capacity=1]

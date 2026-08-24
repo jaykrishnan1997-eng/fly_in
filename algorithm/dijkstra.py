@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   dijkstra.py                                          :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 10:55:37 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/13 20:44:02 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/24 13:47:05 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -59,11 +59,11 @@ def dijkstra(
             cost_stat.update({current_zone: (0, None)})
         else:
             cost_stat.update({zone: (sys.maxsize, None)})
-    heap: list[tuple[float, int, Zone]] = []
+    heap: list[tuple[float, int, int, Zone]] = []
     counter = 0
-    heapq.heappush(heap, (0, counter, current_zone))
+    heapq.heappush(heap, (0, current_zone.priority_nbr, counter, current_zone))
     while heap:
-        current_zone = heapq.heappop(heap)[2]
+        current_zone = heapq.heappop(heap)[3]
         if current_zone not in visited:
             neighbors: list[Zone] = neighbor(
                 current_zone, blocked, graph.connections, excluded_connection)
@@ -72,11 +72,16 @@ def dijkstra(
                 if total_cost < cost_stat[zone][0]:
                     cost_stat[zone] = (total_cost, current_zone)
                     counter += 1
-                    heapq.heappush(heap, (total_cost, counter,  zone))
+                    heapq.heappush(heap, (
+                        total_cost, zone.priority_nbr, counter,  zone))
             visited.append(current_zone)
         if current_zone == graph.end_hub:
             break
     heap.clear()
+
+    if cost_stat[graph.end_hub][0] == sys.maxsize:
+        return [start_zone]
+
     path: list[Zone] = []
     while current_zone != start_zone:
         path.append(current_zone)

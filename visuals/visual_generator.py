@@ -350,11 +350,14 @@ class Dashboard(App):
     def __init__(
         self,
         engine: Engine,
+        map_path: str
     ) -> None:
         super().__init__()
 
         self.paused = False
         self.engine = engine
+        self.map_path = map_path
+        self.sub_title = map_path
 
     # LAYOUT
     def compose(self) -> ComposeResult:
@@ -464,6 +467,8 @@ class Dashboard(App):
         graph_object = parsed.parser()
 
         self.engine = Engine(graph_object)
+        self.map_path = map_path
+        self.sub_title = map_path
 
         # AIRSPACE MAP
         airspace_map = self.query_one(

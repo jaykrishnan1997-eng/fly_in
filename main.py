@@ -14,12 +14,16 @@ def main() -> None:
         print("Usage is: python3 main.py <path/to/map.txt>")
         sys.exit(1)
 
-    parsed = Parser(sys.argv[1])
+    map_path = sys.argv[1]
+    if ".txt" not in map_path and "maps/" not in map_path:
+        raise ValueError("Usage is: python3 main.py <path/to/map.txt>")
+
+    parsed = Parser(map_path)
     graph_object = parsed.parser()
 
     machine = Engine(graph_object)
 
-    dashboard = Dashboard(machine)
+    dashboard = Dashboard(machine, map_path)
     dashboard.run()
 
 

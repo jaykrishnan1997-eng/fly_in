@@ -1,0 +1,23 @@
+# STRESS TEST: Oscillation trap
+# Symmetric equal-cost fork feeding into a tight merge point.
+# 6 drones through a merge that can only take 1/tick — the
+# fork behind it should force waiting, not endless rerouting.
+
+nb_drones: 6
+
+start_hub: start 0 0 [max_drones=6]
+hub: fork 1 0 [max_drones=6]
+
+hub: path_a 2 1 [max_drones=1]
+hub: path_b 2 -1 [max_drones=1]
+
+hub: merge 3 0 [max_drones=1]
+
+end_hub: goal 4 0 [max_drones=6]
+
+connection: start-fork
+connection: fork-path_a [max_link_capacity=1]
+connection: fork-path_b [max_link_capacity=1]
+connection: path_a-merge [max_link_capacity=1]
+connection: path_b-merge [max_link_capacity=1]
+connection: merge-goal

@@ -1,0 +1,9 @@
+# Edge case: 5 drones forced through a single-capacity choke point
+nb_drones: 5
+
+start_hub: start 0 0 [max_drones=5]
+hub: choke 1 0 [max_drones=1]
+end_hub: goal 2 0 [max_drones=5]
+
+connection: start-choke [max_link_capacity=1]
+connection: choke-goal

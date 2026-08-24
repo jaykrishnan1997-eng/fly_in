@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/22 12:58:04 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/24 12:34:15 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -25,12 +25,16 @@ from data_models.connection import Connection
 class Engine:
     def __init__(self, graph: Graph):
         self.graph = graph
+        open("debug.txt", "w").close()
         self.ticks: int = 0
         self.total_path_cost: int = 0
         self.zone_stat: dict[Zone, list[Drone]] = {}
         self.drones_stat: dict[Drone, deque[Zone]] = {}
         self.connection_stat: dict[Connection, list[Drone]] = {}
         self.zone_outgoing: dict[Zone, int] = {}
+
+        if not self.is_reachable():
+            raise ValueError("No path exists from start_hub to end_hub")
 
         for zone in self.graph.zones:
             if zone == self.graph.start_hub:
@@ -51,6 +55,29 @@ class Engine:
             zone for zone in self.graph.zones if zone.cost == sys.maxsize]
         self.waiting: list[Drone] = []
         self.event_log: list[str] = []
+
+    def is_reachable(self) -> bool:
+        visited = {self.graph.start_hub}
+        queue = deque([self.graph.start_hub])
+        while queue:
+            current = queue.popleft()
+            if current == self.graph.end_hub:
+                return True
+            for conn in self.graph.connections:
+                if conn.zone_a == current:
+                    neighbor = conn.zone_b
+                elif conn.zone_b == current:
+                    neighbor = conn.zone_a
+                else:
+                    neighbor = None
+
+                if (
+                    neighbor and neighbor not in visited
+                    and neighbor.cost != sys.maxsize
+                ):
+                    visited.add(neighbor)
+                    queue.append(neighbor)
+        return False
 
     def next_move(self) -> None:
 
@@ -189,33 +216,10 @@ class Engine:
                     if destination is not None:
                         movements[drone] = drone.current_zone.name
 
-                    # if len(self.drones_stat[drone]) > 1:
-                    #     next_zone = self.drones_stat[drone][1]
-
-                    #     # continue to next zone if it is a normal move
-                    #     if next_zone.cost == 1:
-                    #         self.zone_stat[drone.current_zone].remove(drone)
-
-                    #         drone.previous_zone = drone.current_zone
-                    #         drone.current_zone = next_zone
-                    #         drone.visual_destination = None
-                    #         drone.visual_progress = 0.0
-
-                    #         self.zone_stat[
-                    #             drone.current_zone].append(drone)
-                    #         self.drones_stat[drone].popleft()
-
-                    #         if drone not in movements:
-                    #             movements[drone] = next_zone.name
-
         for drone in self.request.keys():
             expense = self.drones_stat[drone][1].cost
 
             self.total_path_cost += expense
-
-            # drone.previous_zone = drone.current_zone
-            # drone.visual_destination = self.request[drone]
-            # drone.visual_progress = 0.0
 
             self.zone_stat[drone.current_zone].remove(drone)
             drone.came_from.append(drone.current_zone)
@@ -261,13 +265,13 @@ class Engine:
         }
         return movements
 
-    def print_turn(self, movements: dict[Drone, str]) -> None:
-        output = []
+    # def print_turn(self, movements: dict[Drone, str]) -> None:
+    #     output = []
 
-        for drone, destination in movements.items():
-            output.append(f"D{drone.id}-{destination}")
+    #     for drone, destination in movements.items():
+    #         output.append(f"D{drone.id}-{destination}")
 
-        print(" ".join(output))
+    #     print(" ".join(output))
 
     def is_finished(self) -> bool:
         return (
@@ -298,7 +302,7 @@ class Engine:
             )
             self.save_event_log()
 
-        self.print_turn(movements)
+        # self.print_turn(movements)
 
     def save_event_log(self) -> None:
         with open("event_log.txt", "w") as file:
