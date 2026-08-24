@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   drones.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:33:02 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/20 21:02:31 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/24 14:47:24 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -59,4 +59,3 @@ class Drone:
             self.current_connection = None
             self.destination = None
             self.turns_remaining = 0
-

@@ -43,7 +43,7 @@ fclean: clean
 	rm -rf $(VENV)
 # 	rm -f uv.lock
 
-lint:
+lint: install
 	$(UV) run flake8 . --exclude=.venv,venv
 	$(UV) run mypy . \
 		--warn-return-any \
@@ -52,6 +52,6 @@ lint:
 		--disallow-untyped-defs \
 		--check-untyped-defs
 
-lint-strict:
+lint-strict: install
 	$(UV) run flake8 . --exclude=.venv,venv
 	$(UV) run mypy . --strict
