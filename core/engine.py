@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/24 12:34:15 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/24 15:30:50 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -23,8 +23,12 @@ from data_models.connection import Connection
 
 
 class Engine:
+
     def __init__(self, graph: Graph):
         self.graph = graph
+        self._initialize()
+
+    def _initialize(self) -> None:
         open("debug.txt", "w").close()
         self.ticks: int = 0
         self.total_path_cost: int = 0
@@ -121,7 +125,8 @@ class Engine:
 
             next_zone = self.drones_stat[drone][1]
             current_zone = drone.current_zone
-            connection = self.graph.get_connection(current_zone, next_zone)
+            next_connection: Connection | None = self.graph.get_connection(
+                current_zone, next_zone)
 
             with open("debug.txt", "a") as file:
                 file.write(
@@ -134,22 +139,22 @@ class Engine:
                 next_zone in self.request.values()
                 or
                 (
-                    connection is not None
-                    and self.connection_capacity[connection]
-                    >= connection.max_link_capacity
+                    next_connection is not None
+                    and self.connection_capacity[next_connection]
+                    >= next_connection.max_link_capacity
                 )
             ):
                 alternative = dijkstra(
                     drone,
                     list(set(self.blocked) | set(drone.came_from)),
                     self.graph,
-                    connection
+                    next_connection
                 )
 
                 if len(alternative) > 1:
                     self.drones_stat[drone] = deque(alternative)
                     next_zone = alternative[1]
-                    connection = self.graph.get_connection(
+                    next_connection = self.graph.get_connection(
                         current_zone,
                         next_zone
                     )
@@ -159,16 +164,16 @@ class Engine:
                     self.zone_occupancy[next_zone]
                     - self.zone_outgoing[next_zone])
                     < next_zone.max_drones)
-                and connection
-                and self.connection_capacity[connection]
-                < connection.max_link_capacity
+                and next_connection
+                and self.connection_capacity[next_connection]
+                < next_connection.max_link_capacity
             ):
                 # normal transit
                 if next_zone.cost == 1:
                     self.request[drone] = next_zone
                     self.zone_occupancy[next_zone] += 1
                     self.zone_outgoing[current_zone] += 1
-                    self.connection_capacity[connection] += 1
+                    self.connection_capacity[next_connection] += 1
 
                 # special transit
                 elif next_zone.cost < sys.maxsize and next_zone.cost > 1:
@@ -176,7 +181,7 @@ class Engine:
                     if drone.current_connection is None:
                         self.request[drone] = next_zone
                         self.zone_outgoing[current_zone] += 1
-                        self.connection_capacity[connection] += 1
+                        self.connection_capacity[next_connection] += 1
                         # self.connection_stat[connection].append(drone)
 
                     # towards the connection
@@ -323,7 +328,7 @@ class Engine:
             time.sleep(1)
 
     def reset(self) -> None:
-        self.__init__(self.graph)
+        self._initialize()
 
     def abs_distance(self, x: int, y: int) -> float:
         return (

@@ -8,6 +8,7 @@ from textual.widget import Widget
 from textual.color import Color
 from textual.events import MouseMove
 from core.engine import Engine
+from data_models.zone import Zone
 
 
 # ┌──────────────────────────────────────────────────────────────┐
@@ -27,9 +28,7 @@ from core.engine import Engine
 
 class AirspaceMap(Widget):
 
-    # ######################################## #
     # TEXTUAL WIDGET TO COMPILE THE ENTIRE MAP #
-    # ######################################## #
     DEFAULT_CSS = """
     AirspaceMap {
         width: 100%;
@@ -52,17 +51,13 @@ class AirspaceMap(Widget):
         "bright_green",
     ]
 
-    def __init__(
-        self,
-        engine: Engine,
-        **kwargs: object,
-    ) -> None:
-        super().__init__(**kwargs)
+    def __init__(self, engine: Engine) -> None:
+        super().__init__()
 
         self.engine = engine
 
         # Screen position of zone
-        self.zone_positions: dict[tuple[int, int], object] = {}
+        self.zone_positions: dict[tuple[int, int], Zone] = {}
 
         # Currently hovered zone
         self.hovered_zone = None
@@ -73,9 +68,7 @@ class AirspaceMap(Widget):
         # self.tooltip = HoverTooltip("")
         # self.tooltip.display = False
 
-    # ########### #
     # COLOR GUARD #
-    # ########### #
 
     def rich_color(self, color: str | None) -> str:
         # Convert map color orange to format that Textual accept
@@ -94,9 +87,7 @@ class AirspaceMap(Widget):
         except ValueError:
             return "white"
 
-    # ######### #
     #  SCALING  #
-    # ######### #
 
     def scale_coordinates(
         self,
@@ -117,15 +108,8 @@ class AirspaceMap(Widget):
         padding_x = 4
         padding_y = 2
 
-        usable_width = max(
-            width - (padding_x * 2) - 1,
-            1,
-        )
-
-        usable_height = max(
-            height - (padding_y * 2) - 1,
-            1,
-        )
+        usable_width = max(width - (padding_x * 2) - 1, 1)
+        usable_height = max(height - (padding_y * 2) - 1, 1)
 
         if x_range == 0:
             screen_x = width // 2
@@ -143,17 +127,11 @@ class AirspaceMap(Widget):
                 * usable_height
             )
 
-        screen_y = (
-            height
-            - 1
-            - screen_y
-        )
+        screen_y = (height - 1 - screen_y)
 
         return screen_x, screen_y
 
-    # ###################### #
     # DRAW LINE BETWEEN ZONE #
-    # ###################### #
 
     def draw_line(
         self,
@@ -196,14 +174,13 @@ class AirspaceMap(Widget):
                 character,
                 style="dim white",
             )
-    # ########### #
+
     #  DRAW ZONE  #
-    # ########### #
 
     def draw_zone(
         self,
         canvas: list[list[Text]],
-        zone,
+        zone: Zone,
         x: int,
         y: int,
     ) -> None:
@@ -241,10 +218,7 @@ class AirspaceMap(Widget):
             style = self.rich_color(zone.color)
 
         # ADDING ZONE TO CANVAS
-        canvas[y][x] = Text(
-            symbol,
-            style=style,
-        )
+        canvas[y][x] = Text(symbol, style=style)
 
         # # ADDING ZONE NAME
         # name = str(zone.name)
@@ -261,14 +235,12 @@ class AirspaceMap(Widget):
         #             style="bold white"
         #         )
 
-    # ############# #
     #  DRAW DRONES  #
-    # ############# #
 
     def draw_drones(
         self,
         canvas: list[list[Text]],
-        positions: dict
+        positions: dict[Zone, tuple[int, int]]
     ) -> None:
 
         width = len(canvas[0])
@@ -305,11 +277,7 @@ class AirspaceMap(Widget):
                         start_x, start_y = positions[start]
                         end_x, end_y = positions[destination]
 
-                        progress = getattr(
-                            drone,
-                            "visual_progress",
-                            0.0,
-                        )
+                        progress = getattr(drone, "visual_progress", 0.0)
 
                         x = int(start_x + (end_x - start_x) * progress)
                         y = int(start_y + (end_y - start_y) * progress)
@@ -332,11 +300,7 @@ class AirspaceMap(Widget):
                             start_x, start_y = positions[previous]
                             end_x, end_y = positions[current]
 
-                            progress = getattr(
-                                drone,
-                                "visual_progress",
-                                0.0,
-                            )
+                            progress = getattr(drone, "visual_progress", 0.0)
 
                             x = int(start_x + (end_x - start_x) * progress)
                             y = int(start_y + (end_y - start_y) * progress)
@@ -356,8 +320,7 @@ class AirspaceMap(Widget):
                     continue
 
                 color = self.DRONE_COLORS[
-                    (drone.id - 1) % len(self.DRONE_COLORS)
-                ]
+                    (drone.id - 1) % len(self.DRONE_COLORS)]
                 label = f"D{drone.id}"
 
                 # DRAW DRONE ID
@@ -365,15 +328,13 @@ class AirspaceMap(Widget):
 
                     target_x = x + index
                     if 0 <= target_x < width and 0 <= y < height:
-
                         canvas[y][target_x] = Text(
                             chars,
                             style=f"bold {color}"
                         )
 
-    # ############ #
     #    RENDER    #
-    # ############ #
+
     def render(self) -> Text:
         # Render the complete airspace map
 
@@ -393,10 +354,7 @@ class AirspaceMap(Widget):
 
         # Graph coordinate bounds
 
-        coordinates = [
-            zone.coordinates
-            for zone in zones
-        ]
+        coordinates = [zone.coordinates for zone in zones]
 
         min_x = min(coord[0] for coord in coordinates)
         max_x = max(coord[0] for coord in coordinates)
@@ -471,10 +429,7 @@ class AirspaceMap(Widget):
 
         # Last Draw drones
 
-        self.draw_drones(
-            canvas,
-            positions,
-        )
+        self.draw_drones(canvas, positions)
 
         # DRAW HOVER POPUP
 
@@ -551,16 +506,14 @@ class AirspaceMap(Widget):
 
         return result
 
-    # ########### #
     # Mouse Event #
-    # ########### #
 
     def on_mouse_move(self, event: MouseMove) -> None:
         self.mouse_x = event.offset.x
         self.mouse_y = event.offset.y
 
         hover_radius = 2
-        nearest_zone = None
+        nearest_zone: Zone | None = None
         nearest_distance = float("inf")
 
         for (zone_x, zone_y), zone in self.zone_positions.items():
@@ -578,9 +531,7 @@ class AirspaceMap(Widget):
 
         self.refresh()
 
-    # ####### #
     # Refresh #
-    # ####### #
 
     def refresh_map(self) -> None:
         # refresh map after a simulation update

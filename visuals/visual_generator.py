@@ -12,9 +12,7 @@ from core.engine import Engine
 from visuals.airspace_map import AirspaceMap
 
 
-# ########### #
 #  EVENT LOG  #
-# ########### #
 
 class EventLog(VerticalScroll):
     # Display the simulation event log
@@ -55,9 +53,7 @@ class EventLog(VerticalScroll):
         )
 
 
-# ########### #
 #   SUMMARY   #
-# ########### #
 
 class Summary(Static):
     # Display simulattion statistics.
@@ -115,9 +111,7 @@ class Summary(Static):
         )
 
 
-# ############# #
 #  DRONE TABLE  #
-# ############# #
 
 class DroneTable(DataTable):
     # Display the current state of all drones.
@@ -196,9 +190,7 @@ class DroneTable(DataTable):
             )
 
 
-# ############## #
 #  MAP SELECTOR  #
-# ############## #
 
 class MapSelector(ModalScreen[str | None]):
     # Secondary screen for selecting a map
@@ -269,9 +261,7 @@ class MapSelector(ModalScreen[str | None]):
     #         self.dismiss(None)
 
 
-# ############# #
 #   DASHBOARD   #
-# ############# #
 
 class Dashboard(App):
 
