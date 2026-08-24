@@ -2,6 +2,7 @@
 
 from pathlib import Path
 from parser.map_parser import Parser
+from typing import Any
 from textual.app import App, ComposeResult
 from textual.containers import Container, Horizontal, VerticalScroll
 from textual.widgets import DataTable, Footer, Header, Static
@@ -30,7 +31,7 @@ class EventLog(VerticalScroll):
     def __init__(
         self,
         engine: Engine,
-        **kwargs: object,
+        **kwargs: Any,
     ) -> None:
         super().__init__(**kwargs)
 
@@ -71,7 +72,7 @@ class Summary(Static):
     def __init__(
         self,
         engine: Engine,
-        **kwargs: object,
+        **kwargs: Any,
     ) -> None:
         super().__init__(**kwargs)
 
@@ -113,7 +114,7 @@ class Summary(Static):
 
 #  DRONE TABLE  #
 
-class DroneTable(DataTable):
+class DroneTable(DataTable[str]):
     # Display the current state of all drones.
 
     TITLE = "DRONE TABLE"
@@ -128,7 +129,7 @@ class DroneTable(DataTable):
     def __init__(
         self,
         engine: Engine,
-        **kwargs: object,
+        **kwargs: Any,
     ) -> None:
         super().__init__(**kwargs)
 
@@ -263,7 +264,7 @@ class MapSelector(ModalScreen[str | None]):
 
 #   DASHBOARD   #
 
-class Dashboard(App):
+class Dashboard(App[None]):
 
     # Main Textual application.
     TITLE = "FlyIn - Drone Traffic Simulation"

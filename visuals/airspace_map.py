@@ -3,6 +3,7 @@
 import sys
 import random
 from rich.text import Text
+from typing import Any
 from textual.widget import Widget
 # from textual.widgets import Static
 from textual.color import Color
@@ -51,8 +52,8 @@ class AirspaceMap(Widget):
         "bright_green",
     ]
 
-    def __init__(self, engine: Engine) -> None:
-        super().__init__()
+    def __init__(self, engine: Engine, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
 
         self.engine = engine
 
@@ -60,7 +61,7 @@ class AirspaceMap(Widget):
         self.zone_positions: dict[tuple[int, int], Zone] = {}
 
         # Currently hovered zone
-        self.hovered_zone = None
+        self.hovered_zone: Zone | None = None
 
         self.mouse_x = 0
         self.mouse_y = 0
