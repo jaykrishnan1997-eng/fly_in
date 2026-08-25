@@ -20,12 +20,12 @@ hub: gate_hell5 5 0 [color=red max_drones=1]
 hub: maze_trap_a1 1 1 [color=purple]
 hub: maze_trap_a2 2 1 [color=purple]
 hub: maze_trap_a3 3 1 [color=purple]
-hub: maze_dead_a 4 1 [color=black]
+hub: maze_dead_a 4 1 [color=grey]
 
 hub: maze_trap_b1 1 -1 [color=purple]
 hub: maze_trap_b2 2 -1 [color=purple]
 hub: maze_trap_b3 3 -1 [color=purple]
-hub: maze_dead_b 4 -1 [color=black]
+hub: maze_dead_b 4 -1 [color=grey]
 
 hub: maze_loop1 1 2 [zone=restricted color=brown]
 hub: maze_loop2 2 2 [zone=restricted color=brown]
@@ -56,11 +56,11 @@ hub: false_hope3 11 0 [zone=priority color=gold max_drones=1]
 # More dead ends disguised as good paths
 hub: priority_trap1 9 1 [zone=priority color=gold]
 hub: priority_trap2 10 1 [zone=priority color=gold]
-hub: priority_dead 11 1 [color=black]
+hub: priority_dead 11 1 [color=grey]
 
 hub: priority_trap3 9 -1 [zone=priority color=gold]
 hub: priority_trap4 10 -1 [zone=priority color=gold]
-hub: priority_dead2 11 -1 [color=black]
+hub: priority_dead2 11 -1 [color=grey]
 
 # === LAYER 4: The Convergence Hell ===
 # Multiple restricted paths that must merge
