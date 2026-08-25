@@ -1,4 +1,5 @@
 # Priority tiebreak test: normal vs priority at equal cost
+# Expected: Drone chooses pref because priority wins the equal-cost tie.
 nb_drones: 1
 
 start_hub: start 0 0
