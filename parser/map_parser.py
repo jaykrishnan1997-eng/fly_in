@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:51:56 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/24 13:53:57 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/25 11:40:38 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -30,6 +30,9 @@ class Parser:
             sys.exit(1)
 
     def parser(self) -> Graph:
+        if not any(line.split("#", 1)[0].strip() for line in self.map):
+            raise ValueError("Map file is empty")
+
         nb_drones: int | None = None
         zones: list[Zone] = []
         connections: list[Connection] = []
