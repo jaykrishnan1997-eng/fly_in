@@ -1,3 +1,6 @@
+# Expected: Only 2 drones can pass through h1 at once and 1 drone through h2;
+# h1→h3 has capacity 1. The 5th drone cannot reach h3 because h2 has no outgoing
+# connection and h1→h3 can only process one drone at a time.
 nb_drones: 5
 
 start_hub: h0 0 0 [max_drones=5]

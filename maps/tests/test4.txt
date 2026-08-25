@@ -1,4 +1,5 @@
 # Edge case: single drone, trivial path
+# Expected: 1 drone reaches goal in 2 turns.
 nb_drones: 1
 
 start_hub: start 0 0

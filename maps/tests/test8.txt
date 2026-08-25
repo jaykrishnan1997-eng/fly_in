@@ -1,3 +1,4 @@
+# Expected: No solution; mid has max_drones=0, so the drone cannot reach goal.
 nb_drones: 1
 start_hub: start 0 0
 end_hub: goal 1 0

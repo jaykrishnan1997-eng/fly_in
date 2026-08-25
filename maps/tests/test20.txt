@@ -1,0 +1,11 @@
+# Expected: Drone ignores dead end and reaches goal in 2 turns.
+nb_drones: 1
+
+start_hub: start 0 0
+hub: dead 1 1
+hub: correct 1 0
+end_hub: goal 2 0
+
+connection: start-dead
+connection: start-correct
+connection: correct-goal
