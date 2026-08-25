@@ -17,6 +17,7 @@ install:
 	fi
 	$(UV) sync
 	@echo "Virtual environment ready: $(VENV)"
+	@echo "Run: source $(VENV)/bin/activate";
 
 activate: install
 	@SHELL_NAME=$$(basename "$$SHELL"); \
