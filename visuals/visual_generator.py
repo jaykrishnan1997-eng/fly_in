@@ -1,4 +1,16 @@
 #!/usr/bin/env python3
+# ########################################################################### #
+#   shebang: 1                                                                #
+#                                                          :::      ::::::::  #
+#   visual_generator.py                                  :+:      :+:    :+:  #
+#                                                      +:+ +:+         +:+    #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#                                                  +#+#+#+#+#+   +#+          #
+#   Created: 2026/08/25 11:19:20 by jkrishna            #+#    #+#            #
+#   Updated: 2026/08/25 11:19:23 by jkrishna           ###   ########.fr      #
+#                                                                             #
+# ########################################################################### #
+
 
 from pathlib import Path
 from parser.map_parser import Parser

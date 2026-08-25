@@ -1,7 +1,20 @@
 #!/usr/bin/env python3
+# ########################################################################### #
+#   shebang: 1                                                                #
+#                                                          :::      ::::::::  #
+#   airspace_map.py                                      :+:      :+:    :+:  #
+#                                                      +:+ +:+         +:+    #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#                                                  +#+#+#+#+#+   +#+          #
+#   Created: 2026/08/25 11:19:02 by jkrishna            #+#    #+#            #
+#   Updated: 2026/08/25 11:20:36 by jkrishna           ###   ########.fr      #
+#                                                                             #
+# ########################################################################### #
+
 
 import sys
 import random
+
 from rich.text import Text
 from typing import Any
 from textual.widget import Widget
