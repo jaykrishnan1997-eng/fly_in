@@ -1,7 +1,7 @@
 # Expected: All 25 drones eventually reach impossible_goal, but with a very high
 # turn count due to the severe bottlenecks, restricted zones, and capacity-1 links.
 
-# CHALLENGER LEVEL: THE IMPOSSIBLE DREAM
+# drezan LEVEL
 # WARNING: This map is designed to be extremely challenging and may not be solvable
 # by most algorithms. It's intended as a stress test and research challenge.
 # The goal is NOT to validate this map but to push algorithmic limits.
