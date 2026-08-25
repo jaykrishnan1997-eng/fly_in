@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/24 15:30:50 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/25 10:35:17 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -256,7 +256,10 @@ class Engine:
                     drone.start_transit(connection, self.request[drone])
                     self.connection_stat[connection].append(drone)
                 else:
-                    raise ValueError
+                    raise ValueError(
+                        f"No connection from {drone.current_zone.name} "
+                        f"to {self.request[drone].name}"
+                    )
             movements[drone] = self.get_movement_destination(drone)
 
         for drone in self.drones_stat:
