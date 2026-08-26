@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   engine.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/25 10:35:17 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/26 17:10:19 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -29,7 +29,7 @@ class Engine:
         self._initialize()
 
     def _initialize(self) -> None:
-        open("debug.txt", "w").close()
+        # open("debug.txt", "w").close()
         self.ticks: int = 0
         self.total_path_cost: int = 0
         self.zone_stat: dict[Zone, list[Drone]] = {}
@@ -128,13 +128,13 @@ class Engine:
             next_connection: Connection | None = self.graph.get_connection(
                 current_zone, next_zone)
 
-            with open("debug.txt", "a") as file:
-                file.write(
-                    f"D{drone.id}: {current_zone.name} -> {next_zone.name}, "
-                    f"occupancy={self.zone_occupancy[next_zone]}, "
-                    f"outgoing={self.zone_outgoing[next_zone]}, "
-                    f"max={next_zone.max_drones}\n"
-                )
+            # with open("debug.txt", "a") as file:
+            #     file.write(
+            #         f"D{drone.id}: {current_zone.name} -> {next_zone.name}, "
+            #         f"occupancy={self.zone_occupancy[next_zone]}, "
+            #         f"outgoing={self.zone_outgoing[next_zone]}, "
+            #         f"max={next_zone.max_drones}\n"
+            #     )
             if (
                 next_zone in self.request.values()
                 or
