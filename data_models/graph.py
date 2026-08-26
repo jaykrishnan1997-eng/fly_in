@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/04 19:46:41 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/17 16:34:55 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/26 13:22:37 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -43,13 +43,13 @@ class Graph:
                 return connection
         return None
 
-    def __str__(self) -> str:
-        nb_zones = len(self.zones)
-        nb_connections = len(self.connections)
-        return (
-            f"Graph: {nb_zones} zones"
-            f" and {nb_connections} connections\n\n"
-            f"Start zone: {self.start_hub}\n"
-            f"end zone: {self.end_hub}\n"
-            f"Total drones: {self.total_drones}\n"
-        )
+    # def __str__(self) -> str:
+    #     nb_zones = len(self.zones)
+    #     nb_connections = len(self.connections)
+    #     return (
+    #         f"Graph: {nb_zones} zones"
+    #         f" and {nb_connections} connections\n\n"
+    #         f"Start zone: {self.start_hub}\n"
+    #         f"end zone: {self.end_hub}\n"
+    #         f"Total drones: {self.total_drones}\n"
+    #     )

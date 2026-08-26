@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   zone.py                                              :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/04 13:13:14 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/10 14:28:29 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/26 13:22:35 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -38,9 +38,9 @@ class Zone:
         self.cost = Zone.ZONE_COSTS[type][0]
         self.priority_nbr = Zone.ZONE_COSTS[type][1]
 
-    def __str__(self) -> str:
-        return (
-            f"name: {self.name}\ncoordinates: {self.coordinates}\n"
-            f"type: {self.type}\ncolor: {self.color}\n"
-            f"maximum occupancy: {self.max_drones}\n"
-        )
+    # def __str__(self) -> str:
+    #     return (
+    #         f"name: {self.name}\ncoordinates: {self.coordinates}\n"
+    #         f"type: {self.type}\ncolor: {self.color}\n"
+    #         f"maximum occupancy: {self.max_drones}\n"
+    #     )
