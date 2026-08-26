@@ -4,3 +4,4 @@ __pycache__
 uv.lock
 event_log.txt
 debug.txt
+.vscode

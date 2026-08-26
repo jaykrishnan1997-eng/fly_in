@@ -19,14 +19,6 @@ install:
 	@echo "Virtual environment ready: $(VENV)"
 	@echo "Run: source $(VENV)/bin/activate";
 
-activate: install
-	@SHELL_NAME=$$(basename "$$SHELL"); \
-	if [ -f "$(VENV)/bin/activate.$$SHELL_NAME" ]; then \
-		echo "Run: source $(VENV)/bin/activate.$$SHELL_NAME"; \
-	else \
-		echo "Run: source $(VENV)/bin/activate"; \
-	fi
-
 run: install
 	$(UV) run $(PYTHON) $(MAIN) $(MAP)
 
