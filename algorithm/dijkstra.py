@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 10:55:37 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/27 18:02:58 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/27 23:02:04 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -78,7 +78,7 @@ def dijkstra(
         Zone, tuple[float, Zone | None]
     ] = {}
 
-    # Initialize S with 0 and None and remaining all 
+    # Initialize S with 0 and None and remaining all
     # inf and None
     for zone in graph.zones:
         if zone == current_zone:
