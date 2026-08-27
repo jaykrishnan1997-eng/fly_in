@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/04 19:46:41 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/26 13:22:37 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/27 22:39:58 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -16,6 +16,7 @@ from data_models.connection import Connection
 
 
 class Graph:
+    """Represent the complete map used by the simulation."""
     def __init__(
         self,
         map: str,
@@ -25,6 +26,16 @@ class Graph:
         end_hub: Zone,
         total_drones: int
     ) -> None:
+        """Initialize the graph with its zones and connections.
+
+        Args:
+            map: Path or name of the map being simulated.
+            zones: All zones contained in the map.
+            connections: All connections between zones.
+            start_hub: Starting zone for all drones.
+            end_hub: Destination zone for all drones.
+            total_drones: Number of drones in the simulation.
+        """
 
         self.map = map
         self.zones = zones
@@ -33,7 +44,20 @@ class Graph:
         self.end_hub = end_hub
         self.total_drones = total_drones
 
-    def get_connection(self, z_a: Zone, z_b: Zone) -> Connection | None:
+    def get_connection(
+        self,
+        z_a: Zone,
+        z_b: Zone
+    ) -> Connection | None:
+        """Find the connection between two zones.
+
+        Args:
+            z_a: First zone.
+            z_b: Second zone.
+
+        Returns:
+            The connection between the zones, or None if no connection exists.
+        """
         for connection in self.connections:
             if (
                 (connection.zone_a == z_a and connection.zone_b == z_b)

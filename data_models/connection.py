@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/04 16:45:46 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/26 13:22:33 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/27 22:36:24 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -15,12 +15,20 @@ from data_models.zone import Zone
 
 
 class Connection:
+    """Represent a connection between two zones."""
     def __init__(
         self,
         zone_a: Zone,
         zone_b: Zone,
         max_link_capacity: int = 1
     ) -> None:
+        """Initialize a connection between two zones.
+
+        Args:
+            zone_a: First zone connected by the link.
+            zone_b: Second zone connected by the link.
+            max_link_capacity: Maximum number of drones allowed on the link.
+        """
 
         self.name = f"{zone_a.name}-{zone_b.name}"
         self.zone_a = zone_a

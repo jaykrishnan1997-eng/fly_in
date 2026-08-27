@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/25 11:19:20 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/27 22:20:22 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/27 22:22:06 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -565,7 +565,7 @@ class Dashboard(App[None]):
         self.map_path = map_path
         self.sub_title = map_path
 
-        # Find the widget whose ID is map 
+        # Find the widget whose ID is map
         # and make sure it is an AirspaceMap. Slly for others
 
         # AIRSPACE MAP

@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   map_parser.py                                        :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/03 14:51:56 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/25 11:40:38 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/27 22:46:53 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -19,8 +19,16 @@ import sys
 
 
 class Parser:
-    """ For parsing map information into graph object"""
+    """Parse a map file and build the graph used by the simulation."""
     def __init__(self, path: str) -> None:
+        """Initialize the parser and read the map file.
+
+        Args:
+            path: Path to the map file to parse.
+
+        Raises:
+            SystemExit: If the map file cannot be opened.
+        """
         self.path = path
         try:
             with open(path) as f:
@@ -30,6 +38,19 @@ class Parser:
             sys.exit(1)
 
     def parser(self) -> Graph:
+        """Parse the map data and create a Graph object.
+
+        The parser reads the number of drones, zones, connections,
+        optional metadata, and start/end hubs from the map file. It also
+        validates the map definitions before creating the graph.
+
+        Returns:
+            A Graph containing the parsed zones, connections, hubs,
+            and total number of drones.
+
+        Raises:
+            ValueError: If the map contains invalid or missing data.
+        """
         if not any(line.split("#", 1)[0].strip() for line in self.map):
             raise ValueError("Map file is empty")
 

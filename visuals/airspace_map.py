@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/25 11:19:02 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/27 21:56:10 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/27 22:33:47 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -27,7 +27,7 @@ from data_models.zone import Zone
 
 class AirspaceMap(Widget):
 
-    # TEXTUAL WIDGET TO COMPILE THE ENTIRE MAP #
+    """Display the drone airspace map using a Textual widget."""
     DEFAULT_CSS = """
     AirspaceMap {
         width: 100%;
@@ -51,6 +51,12 @@ class AirspaceMap(Widget):
     ]
 
     def __init__(self, engine: Engine, **kwargs: Any) -> None:
+        """Initialize the airspace map.
+
+        Args:
+            engine: Simulation engine containing the graph and drones.
+            **kwargs: Additional arguments passed to the Textual widget.
+        """
         super().__init__(**kwargs)
 
         self.engine = engine
@@ -70,7 +76,14 @@ class AirspaceMap(Widget):
     # COLOR GUARD #
 
     def rich_color(self, color: str | None) -> str:
-        # Convert map color orange to format that Textual accept
+        """Convert a map color to a Textual-compatible color.
+
+        Args:
+            color: Color name or hexadecimal color value.
+
+        Returns:
+            A valid hexadecimal color string.
+        """
         if color == "rainbow":
             color = random.choice([
                 "violet", "indigo",
@@ -99,7 +112,21 @@ class AirspaceMap(Widget):
         width: int,
         height: int,
     ) -> tuple[int, int]:
+        """Scale graph coordinates to positions on the terminal canvas.
 
+        Args:
+            x: X coordinate of the zone.
+            y: Y coordinate of the zone.
+            min_x: Minimum X coordinate in the graph.
+            max_x: Maximum X coordinate in the graph.
+            min_y: Minimum Y coordinate in the graph.
+            max_y: Maximum Y coordinate in the graph.
+            width: Width of the terminal canvas.
+            height: Height of the terminal canvas.
+
+        Returns:
+            The scaled screen coordinates as an (x, y) tuple.
+        """
         # extra space around the map
         x_range = max_x - min_x
         y_range = max_y - min_y
@@ -140,7 +167,15 @@ class AirspaceMap(Widget):
         x2: int,
         y2: int,
     ) -> None:
+        """Draw a connection between two zones on the canvas.
 
+        Args:
+            canvas: Two-dimensional canvas used for rendering.
+            x1: X coordinate of the first zone.
+            y1: Y coordinate of the first zone.
+            x2: X coordinate of the second zone.
+            y2: Y coordinate of the second zone.
+        """
         width = len(canvas[0])
         height = len(canvas)
 
@@ -183,7 +218,14 @@ class AirspaceMap(Widget):
         x: int,
         y: int,
     ) -> None:
+        """Draw a zone symbol at its screen position.
 
+        Args:
+            canvas: Two-dimensional canvas used for rendering.
+            zone: Zone to draw.
+            x: X coordinate on the canvas.
+            y: Y coordinate on the canvas.
+        """
         width = len(canvas[0])
         height = len(canvas)
 
@@ -241,7 +283,12 @@ class AirspaceMap(Widget):
         canvas: list[list[Text]],
         positions: dict[Zone, tuple[int, int]]
     ) -> None:
+        """Draw all drones at their current or interpolated positions.
 
+        Args:
+            canvas: Two-dimensional canvas used for rendering.
+            positions: Mapping of zones to screen coordinates.
+        """
         width = len(canvas[0])
         height = len(canvas)
 
@@ -335,7 +382,11 @@ class AirspaceMap(Widget):
     #    RENDER    #
 
     def render(self) -> Text:
-        # Render the complete airspace map
+        """Render the complete airspace map.
+
+        Returns:
+            A Textual Text object containing the rendered map.
+        """
 
         width = self.size.width
         height = self.size.height
@@ -508,6 +559,11 @@ class AirspaceMap(Widget):
     # Mouse Event #
 
     def on_mouse_move(self, event: MouseMove) -> None:
+        """Update the hovered zone when the mouse moves.
+
+        Args:
+            event: Textual mouse-movement event containing the cursor position.
+        """
         self.mouse_x = event.offset.x
         self.mouse_y = event.offset.y
 
@@ -533,5 +589,5 @@ class AirspaceMap(Widget):
     # Refresh #
 
     def refresh_map(self) -> None:
-        # refresh map after a simulation update
+        """Refresh the map after the simulation state changes."""
         self.refresh()
