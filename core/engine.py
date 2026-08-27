@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   engine.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/27 12:01:23 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/27 18:09:29 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -23,12 +23,19 @@ from data_models.connection import Connection
 
 
 class Engine:
+    """Manage the drone traffic simulation."""
 
     def __init__(self, graph: Graph):
+        """Initialize the simulation with a graph.
+
+        Args:
+            graph: Graph containing zones, connections, and drones.
+        """
         self.graph = graph
         self._initialize()
 
     def _initialize(self) -> None:
+        """Initialize simulation state and create the drones."""
         # open("debug.txt", "w").close()
         self.ticks: int = 0
         self.total_path_cost: int = 0
@@ -61,6 +68,11 @@ class Engine:
         self.event_log: list[str] = []
 
     def is_reachable(self) -> bool:
+        """Check whether the end hub can be reached from the start hub.
+
+        Returns:
+            True if a valid path exists, otherwise False.
+        """
         visited = {self.graph.start_hub}
         queue = deque([self.graph.start_hub])
         while queue:
@@ -84,7 +96,7 @@ class Engine:
         return False
 
     def next_move(self) -> None:
-
+        """Calculate valid movements for the current simulation turn."""
         self.request = {}
 
         self.zone_outgoing = {
@@ -195,17 +207,31 @@ class Engine:
                         self.zone_outgoing[current_zone] += 1
 
     def get_movement_destination(self, drone: Drone) -> str:
+        """Return the current movement destination of a drone.
+
+        Args:
+            drone: Drone whose destination is requested.
+
+        Returns:
+            The connection name while in transit, otherwise the
+            current zone name.
+        """
         if drone.current_connection is not None:
             return drone.current_connection.name
 
         return drone.current_zone.name
 
     def move(self) -> dict[Drone, str]:
+        """Execute requested movements and update simulation state.
+
+        Returns:
+            A mapping of each moved drone to its destination.
+        """
         # import pdb
         # pdb.set_trace()
         self.waiting = []
         movements = {}
-        
+
         # updation for drones in transit
         for drone in self.drones_stat.keys():
             if drone.current_connection is not None:
@@ -291,6 +317,11 @@ class Engine:
     #     print(" ".join(output))
 
     def is_finished(self) -> bool:
+        """Check whether all drones have reached the end hub.
+
+        Returns:
+            True if all drones are at the end hub, otherwise False.
+        """
         return (
             len(self.zone_stat[self.graph.end_hub])
             == len(self.drones_stat)
@@ -298,6 +329,7 @@ class Engine:
 
     # One simulation iteration
     def simulation(self) -> None:
+        """Run one complete simulation turn."""
 
         for drone in self.drones_stat.keys():
             if drone.current_connection is None:
@@ -323,12 +355,16 @@ class Engine:
         # self.print_turn(movements)
 
     def save_event_log(self) -> None:
+        """Run one simulation turn and update all drone states."""
+
         with open("event_log.txt", "w") as file:
             for event in self.event_log:
                 file.write(event + "\n")
 
-    # The timer / Big Stepper! 
+    # The timer / Big Stepper!
     def run(self) -> None:
+        """Run the simulation continuously until all drones finish."""
+
         while True:
             # start loop and one turn at a time
             self.simulation()
@@ -342,9 +378,19 @@ class Engine:
             time.sleep(1)
 
     def reset(self) -> None:
+        """Reset the simulation to its initial state."""
         self._initialize()
 
     def abs_distance(self, x: int, y: int) -> float:
+        """Calculate the distance from a point to the start hub.
+
+        Args:
+            x: X coordinate of the point.
+            y: Y coordinate of the point.
+
+        Returns:
+            The Euclidean distance from the start hub.
+        """
         return (
             math.sqrt(
                 (x - self.graph.start_hub.coordinates[0])**2 +

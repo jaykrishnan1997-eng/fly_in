@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   dijkstra.py                                          :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 10:55:37 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/27 12:06:19 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/27 18:02:58 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -25,6 +25,17 @@ def neighbor(
     current_zone: Zone, blocked: list[Zone], connection: list[Connection],
     excluded_connection: Connection | None = None
 ) -> list[Zone]:
+    """Return neighboring zones reachable from the current zone.
+
+    Args:
+        current_zone: Zone from which to find neighbors.
+        blocked: Zones that cannot be entered.
+        connection: Connections available in the graph.
+        excluded_connection: Optional connection to ignore.
+
+    Returns:
+        A list of reachable neighboring zones.
+    """
     neighbor: list[Zone] = []
     for line in connection:
         if line == excluded_connection:
@@ -46,20 +57,37 @@ def dijkstra(
     drone: Drone, blocked: list[Zone], graph: Graph,
     excluded_connection: Connection | None = None
 ) -> list[Zone]:
+    """Find the cheapest path from a drone to the end hub.
 
+    Args:
+        drone: Drone for which the path is calculated.
+        blocked: Zones that cannot be used in the path.
+        graph: Graph containing zones and connections.
+        excluded_connection: Optional connection to avoid.
+
+    Returns:
+        A list of zones forming the path from the drone to the end hub.
+        Returns only the current zone if the end hub is unreachable.
+    """
     current_zone: Zone = drone.current_zone
     start_zone: Zone = current_zone
     visited: Deque[Zone] = deque()
+
+    # Zone -> (cheapest known cost, previous zone)
     cost_stat: dict[
         Zone, tuple[float, Zone | None]
     ] = {}
 
+    # Initialize S with 0 and None and remaining all 
+    # inf and None
     for zone in graph.zones:
         if zone == current_zone:
             cost_stat.update({current_zone: (0, None)})
         else:
             cost_stat.update({zone: (sys.maxsize, None)})
 
+    # (cost, priority_nbr, counter, zone)
+    # Python's heap compares tuples from left to right
     heap: list[tuple[float, int, int, Zone]] = []
     counter = 0
     heapq.heappush(heap, (0, current_zone.priority_nbr, counter, current_zone))
