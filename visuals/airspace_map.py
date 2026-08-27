@@ -7,12 +7,11 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/25 11:19:02 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/27 23:59:14 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/28 00:04:05 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 
-import sys
 import random
 
 from rich.text import Text
