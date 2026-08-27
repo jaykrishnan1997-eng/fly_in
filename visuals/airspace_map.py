@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/25 11:19:02 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/28 00:04:05 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/28 00:17:27 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -292,7 +292,6 @@ class AirspaceMap(Widget):
 
         for drone in self.engine.drones_stat:
 
-            # COMPLETED DRONES DISAPPEAR FROM THE MAP
             if (
                 drone.current_zone
                 == self.engine.graph.end_hub
