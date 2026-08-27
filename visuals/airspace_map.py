@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/25 11:19:02 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/27 22:33:47 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/27 23:59:14 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -236,27 +236,26 @@ class AirspaceMap(Widget):
 
         if zone == self.engine.graph.start_hub:
             symbol = "S"
-            style = self.rich_color(zone.color)
 
         elif zone == self.engine.graph.end_hub:
             symbol = "E"
-            style = self.rich_color(zone.color)
 
-        elif zone.cost == 2:
+        elif zone.type.lower() == "restricted":
             symbol = "R"
-            style = self.rich_color(zone.color)
 
-        elif zone.cost == 1:
+        elif zone.type.lower() == "priority":
             symbol = "P"
-            style = self.rich_color(zone.color)
 
-        elif zone.cost == sys.maxsize:
+        elif zone.type.lower() == "normal":
+            symbol = "N"
+
+        elif zone.type.lower() == "blocked":
             symbol = "B"
-            style = self.rich_color(zone.color)
 
         else:
             symbol = "U"
-            style = self.rich_color(zone.color)
+
+        style = self.rich_color(zone.color)
 
         # ADDING ZONE TO CANVAS
         canvas[y][x] = Text(symbol, style=style)
