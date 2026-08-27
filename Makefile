@@ -30,6 +30,7 @@ clean:
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 	find . -type d -name ".pytest_cache" -exec rm -rf {} +
 	find . -name "*.pyc" -delete
+	rm -f event_log.txt
 
 # used if u want to remove venv
 fclean: clean
