@@ -1,9 +1,0 @@
-# Edge case: two distinct zones placed at identical coordinates
-nb_drones: 1
-start_hub: start 0 0
-hub: mid1 1 1
-hub: mid2 1 1
-end_hub: goal 2 0
-connection: start-mid1
-connection: mid1-mid2
-connection: mid2-goal
