@@ -7,7 +7,7 @@
 #   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:33:02 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/27 22:38:02 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/27 23:35:59 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -56,6 +56,11 @@ class Drone:
         self.current_connection = connection
         self.destination = destination
         self.turns_remaining = destination.cost - 1
+
+        if destination.cost > 1:
+            self.visual_progress = 0.5
+        else:
+            self.visual_progress = 0.0
 
     def update_transit(self) -> None:
         """Advance the drone by one turn while in transit.
