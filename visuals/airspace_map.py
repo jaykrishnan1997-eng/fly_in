@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   airspace_map.py                                      :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/25 11:19:02 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/25 11:20:36 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/27 21:56:10 by jay-k              ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -23,21 +23,6 @@ from textual.color import Color
 from textual.events import MouseMove
 from core.engine import Engine
 from data_models.zone import Zone
-
-
-# ┌──────────────────────────────────────────────────────────────┐
-# │ HEADER                                                       │
-# ├──────────────────────────────────┬───────────────────────────┤
-# │                                  │ EVENT LOGS                │
-# │                                  |                           |
-# │           AIRSPACE MAP           |                           │
-# │                                  │                           │
-# │                                  │                           │
-# ├──────────────────────────────────┴───────────────────────────┤
-# │ DRONES                           │ SUMMARY                   │
-# ├──────────────────────────────────┴───────────────────────────┤
-# │ FOOTER / CONTROLS                                            │
-# └──────────────────────────────────────────────────────────────┘
 
 
 class AirspaceMap(Widget):
