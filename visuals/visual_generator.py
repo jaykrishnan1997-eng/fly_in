@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/25 11:19:20 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/25 11:19:23 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/27 11:23:59 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -114,12 +114,13 @@ class Summary(Static):
             self.engine.zone_occupancy.get(self.engine.graph.end_hub, 0)
         )
 
+        tpc = int(self.engine.total_path_cost - self.engine.graph.total_drones)
         self.update(
             f"Total Drones: {total_drones}\n"
             f"Drones in Connection: {drones_in_connections}\n"
             f"Drones in Transit: {drones_in_transit}\n"
             f"Completed Drones: {completed_drones}\n"
-            f"Total path cost: {self.engine.total_path_cost}\n"
+            f"Total path cost: {tpc}\n"
             f"Total turns: {self.engine.ticks}\n"
         )
 

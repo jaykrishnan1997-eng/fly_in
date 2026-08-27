@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   engine.py                                            :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/26 17:10:19 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/27 11:17:13 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -116,6 +116,7 @@ class Engine:
         # print(drones)
         for drone in drones:
 
+            # if drone in transit: Let him cook!
             if drone.current_connection is not None:
                 continue
 
@@ -135,6 +136,8 @@ class Engine:
             #         f"outgoing={self.zone_outgoing[next_zone]}, "
             #         f"max={next_zone.max_drones}\n"
             #     )
+
+            # Two kids and 1 bike, scenerio!
             if (
                 next_zone in self.request.values()
                 or
@@ -159,6 +162,7 @@ class Engine:
                         next_zone
                     )
 
+            # is this movement actually allowed
             if (
                 ((
                     self.zone_occupancy[next_zone]
@@ -201,11 +205,14 @@ class Engine:
         # pdb.set_trace()
         self.waiting = []
         movements = {}
+        
+        # updation for drones in transit
         for drone in self.drones_stat.keys():
             if drone.current_connection is not None:
                 destination = drone.destination
                 drone.update_transit()
 
+                # if transit is finished, then update stats
                 if drone.current_connection is None:
                     self.zone_stat[drone.current_zone].append(drone)
                     self.drones_stat[drone].popleft()
@@ -218,9 +225,11 @@ class Engine:
                     if connection is not None:
                         self.connection_stat[connection].remove(drone)
 
+                    # record arival for visializer and event log
                     if destination is not None:
                         movements[drone] = drone.current_zone.name
 
+        # process new movement requests (execute request from next_move)
         for drone in self.request.keys():
             expense = self.drones_stat[drone][1].cost
 
