@@ -1,7 +1,7 @@
 UV := $(shell command -v uv 2>/dev/null || echo "$(HOME)/.local/bin/uv")
 MAIN := main.py
 VENV := .venv
-MAP ?= maps/medium/02_circular_loop.txt
+MAP ?= maps/easy/01_linear_path.txt
 PYTHON := python
 
 .PHONY: install activate run debug clean fclean lint lint-strict

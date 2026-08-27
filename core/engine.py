@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 20:31:45 by jay-k               #+#    #+#            #
-#   Updated: 2026/08/27 11:17:13 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/27 12:01:23 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -251,7 +251,7 @@ class Engine:
                 self.zone_stat[drone.current_zone].append(drone)
                 self.drones_stat[drone].popleft()
 
-            # transit into the connection
+            # cost > 1: transit into the connection
             elif (
                 expense > 1
                 and expense < sys.maxsize
@@ -296,6 +296,7 @@ class Engine:
             == len(self.drones_stat)
         )
 
+    # One simulation iteration
     def simulation(self) -> None:
 
         for drone in self.drones_stat.keys():
@@ -326,6 +327,7 @@ class Engine:
             for event in self.event_log:
                 file.write(event + "\n")
 
+    # The timer / Big Stepper! 
     def run(self) -> None:
         while True:
             # start loop and one turn at a time

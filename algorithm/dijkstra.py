@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 10:55:37 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/24 13:47:05 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/08/27 12:06:19 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -46,22 +46,24 @@ def dijkstra(
     drone: Drone, blocked: list[Zone], graph: Graph,
     excluded_connection: Connection | None = None
 ) -> list[Zone]:
-    # must include restricted zone when the zone
-    # is fully occupied in current, next and next-next move.
+
     current_zone: Zone = drone.current_zone
     start_zone: Zone = current_zone
     visited: Deque[Zone] = deque()
     cost_stat: dict[
         Zone, tuple[float, Zone | None]
     ] = {}
+
     for zone in graph.zones:
         if zone == current_zone:
             cost_stat.update({current_zone: (0, None)})
         else:
             cost_stat.update({zone: (sys.maxsize, None)})
+
     heap: list[tuple[float, int, int, Zone]] = []
     counter = 0
     heapq.heappush(heap, (0, current_zone.priority_nbr, counter, current_zone))
+
     while heap:
         current_zone = heapq.heappop(heap)[3]
         if current_zone not in visited:
@@ -83,6 +85,7 @@ def dijkstra(
         return [start_zone]
 
     path: list[Zone] = []
+
     while current_zone != start_zone:
         path.append(current_zone)
         previous = cost_stat[current_zone][1]
