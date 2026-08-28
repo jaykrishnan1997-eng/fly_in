@@ -28,6 +28,9 @@ make install
 
 This creates a virtual environment (`.venv`) and installs the project dependencies through `uv sync`.
 
+Activate the virtual environment using: source $(VENV)/bin/activate
+
+
 ### Run
 
 ```bash
@@ -65,6 +68,7 @@ make debug          # run with Python's built-in debugger (pdb)
 make lint           # run flake8 and mypy
 make lint-strict    # run flake8 and mypy --strict
 make clean          # remove __pycache__, .mypy_cache, etc.
+make fclen          # clean + remove .venv
 ```
 
 ## Algorithm Explanation
