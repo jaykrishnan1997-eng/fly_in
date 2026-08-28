@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   airspace_map.py                                      :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/25 11:19:02 by jkrishna            #+#    #+#            #
-#   Updated: 2026/08/28 00:17:27 by jay-k              ###   ########.fr      #
+#   Updated: 2026/08/28 11:22:09 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -487,7 +487,7 @@ class AirspaceMap(Widget):
                 f"{zone.name}",
                 f"Cost: {zone.cost}",
                 (
-                    f"Capacity: {self.engine.zone_occupancy[zone]}"
+                    f"Capacity: {self.engine.zone_occupancy.get(zone, 0)}"
                     f"/{zone.max_drones}"
                 ),
                 f"Coordinates: {zone.coordinates}",
