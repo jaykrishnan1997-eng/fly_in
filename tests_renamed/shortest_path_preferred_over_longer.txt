@@ -1,0 +1,14 @@
+# Expected: Drone chooses the shorter path and reaches goal in 2 turns.
+nb_drones: 1
+
+start_hub: start 0 0
+hub: short 1 0
+hub: long1 0 1
+hub: long2 1 1
+end_hub: goal 2 0
+
+connection: start-short
+connection: short-goal
+connection: start-long1
+connection: long1-long2
+connection: long2-goal

@@ -1,0 +1,8 @@
+# Expected: All 3 drones reach goal in 2 turns.
+nb_drones: 3
+start_hub: start 0 0
+hub: wide 1 0 [max_drones=999999]
+end_hub: goal 2 0
+
+connection: start-wide [max_link_capacity=999999]
+connection: wide-goal

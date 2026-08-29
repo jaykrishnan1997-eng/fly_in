@@ -1,0 +1,14 @@
+# Expected: Both drones reach goal in 3 turns, arriving at merge simultaneously.
+nb_drones: 2
+
+start_hub: start 0 0
+hub: left 1 1
+hub: right 1 -1
+hub: merge 2 0
+end_hub: goal 3 0
+
+connection: start-left
+connection: start-right
+connection: left-merge
+connection: right-merge
+connection: merge-goal

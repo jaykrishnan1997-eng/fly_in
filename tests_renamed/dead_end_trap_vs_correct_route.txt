@@ -1,0 +1,11 @@
+# Expected: Drone chooses the route leading to goal and finishes in 2 turns.
+nb_drones: 1
+
+start_hub: start 0 0
+hub: trap 1 1
+hub: route 1 0
+end_hub: goal 2 0
+
+connection: start-trap
+connection: start-route
+connection: route-goal
